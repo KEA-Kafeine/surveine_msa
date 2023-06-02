@@ -1,0 +1,45 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: wspace-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/surveine_wspace_db
+    username: kafeine
+    password: kafeine1!
+  jpa:
+    hibernate:
+      ddlAuto: create
+    generateDdl: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    showSql: true
+  # mvc는 Swagger 관련 설정
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  redis:
+    host: localhost
+    port: 6379
+
+token:
+  secret: GachonUniversity2023KAKAO2023ENTERPRISE2023ACADEMY2023VER02TEAM10KAFEine2018jin2019mo2020gina2020dokyung2019imaeFastTrackLetsGo
+  access-expiration-time: 1800000
+  refresh-expiration-time: 18000000
+
+eureka:
+  instance:
+    instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    # instanceId: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka
+
+logging:
+  level:
+    com.surveine.wspaceservice: DEBUG
