@@ -18,6 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
+    /**
+     * m1. 회원가입 -> wsapce-service
+     * @param reqDTO
+     * @return
+     */
     @PostMapping("/signup")
     public ResponseEntity<Result> signup(@RequestBody MemberSignupReqDTO reqDTO) {
         try {
