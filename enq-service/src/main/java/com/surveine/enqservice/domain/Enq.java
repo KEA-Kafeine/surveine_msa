@@ -26,10 +26,10 @@ public class Enq {
     private Long id;
 
     @Column(name  = "member_id")
-    private Long member_id;
+    private Long memberId;
 
     @JoinColumn(name = "cbox_id")
-    private Long cbox_id;
+    private Long cboxId;
 
     @Column(name = "enq_name")
     private String name;

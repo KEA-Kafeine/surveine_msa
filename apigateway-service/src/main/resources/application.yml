@@ -45,3 +45,11 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/member-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+        - id: enq-service
+          uri: lb://ENQ-SERVICE
+          predicates:
+            - Path=/enq-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/enq-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter

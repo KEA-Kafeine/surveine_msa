@@ -25,12 +25,11 @@ public class EnqRspDTO {
     private EnqStatus enqStatus;
     private DistType distType;
     private LocalDate updateDate;
-    //TODO: Enq 컬럼이랑 같아야 되는지 확인
 
     @Builder
     public EnqRspDTO(Enq enq) throws JsonProcessingException {
         this.id = enq.getId();
-        this.cbox_id = enq.getCbox_id();
+        this.cbox_id = enq.getCboxId();
         this.name = enq.getName();
         this.cont = EnqService.getEnqCont(enq);
         this.isShared = enq.getIsShared();
