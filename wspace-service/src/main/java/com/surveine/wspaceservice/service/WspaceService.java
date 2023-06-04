@@ -177,6 +177,7 @@ public class WspaceService {
         }
     }
 
+    @Transactional
     public Boolean deleteCbox(Long cboxId) {
         Cbox currentCbox = cboxRepository.findById(cboxId).get();
         // cboxId에 해당하는 enq가 하나도 존재하지 않을 때에만 삭제.
@@ -189,6 +190,7 @@ public class WspaceService {
         }
     }
 
+    @Transactional
     public Boolean deleteAbox(Long aboxId) {
         Abox currentAbox = aboxRepository.findById(aboxId).get();
         // aboxId에 해당하는 ans가 하나도 존재하지 않을 때에만 삭제.

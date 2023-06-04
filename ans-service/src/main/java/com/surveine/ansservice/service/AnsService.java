@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -84,5 +85,28 @@ public class AnsService {
                 .build();
 
         ansRepository.save(modifiedAns);
+    }
+
+    @Transactional
+    public void deleteAns(Long ansId) {
+        Optional<Ans> optionalAns = ansRepository.findById(ansId);
+        if (optionalAns.isPresent()) {
+            Ans nowAns = optionalAns.get();
+            if(nowAns.getStatus() == AnsStatus.SUBMIT) {
+                Ans modifiedAns = nowAns.toBuilder()
+                        .isShow(false)
+                        .build();
+                ansRepository.save(modifiedAns);
+            }
+            else {
+                ansRepository.delete(nowAns);
+            }
+        } else {
+            throw new RuntimeException("오류 발생");
+        }
+    }
+
+    public void moveAns(Long ansId, Map<String, Long> aboxId) {
+
     }
 }

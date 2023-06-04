@@ -74,5 +74,49 @@ public class AnsController {
         }
     }
 
-//    public ResponseEntity<Result> deleteAns(@PathVariable Long )
+    /**
+     * a3. 개별 응답지 삭제
+     * @param ansId
+     * @return
+     */
+    @DeleteMapping("/delete/{ansId}")
+    public ResponseEntity<Result> deleteAns(@PathVariable Long ansId) {
+        try {
+            ansService.deleteAns(ansId);
+            Result result = Result.builder()
+                    .isSuccess(true)
+                    .message("응답 삭제 성공")
+                    .build();
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            Result result = Result.builder()
+                    .isSuccess(false)
+                    .message("응답 삭제 실패")
+                    .build();
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
+
+    /**
+     * a5. 개별 응답지 폴더이동
+     * @param ansId
+     * @param aboxId
+     * @return
+     */
+    public ResponseEntity<Result> moveAns(@PathVariable Long ansId, @RequestBody Map<String, Long> aboxId) {
+        try {
+            ansService.moveAns(ansId, aboxId);
+            Result result = Result.builder()
+                    .isSuccess(true)
+                    .message("응답지 이동 성공")
+                    .build();
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            Result result = Result.builder()
+                    .isSuccess(false)
+                    .message("응답지 이동 실패")
+                    .build();
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
 }
