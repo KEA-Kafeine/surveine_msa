@@ -106,7 +106,17 @@ public class AnsService {
         }
     }
 
+    @Transactional
     public void moveAns(Long ansId, Map<String, Long> aboxId) {
-
+        Optional<Ans> optionalAns = ansRepository.findById(ansId);
+        if (optionalAns.isPresent()) {
+            Ans nowAns = optionalAns.get();
+            Ans modifiedAns = nowAns.toBuilder()
+                    .aboxId(aboxId.get("aboxId"))
+                    .build();
+            ansRepository.save(modifiedAns);
+        } else {
+            throw new RuntimeException("오류 발생");
+        }
     }
 }

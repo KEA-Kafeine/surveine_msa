@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/enq")
+@RequestMapping("/enq")
 public class EnqController {
     private final EnqService enqService;
 
