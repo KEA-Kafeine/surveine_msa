@@ -412,4 +412,8 @@ public class EnqService {
             throw new RuntimeException("결과 분석 호출 오류");
         }
     }
+
+    public Optional<Enq> getEnqByDistLink(String distLink) {
+        return enqRepository.findByDistLink(distLink);
+    }
 }

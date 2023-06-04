@@ -2,6 +2,7 @@ package com.surveine.enqservice.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.surveine.enqservice.config.Result;
+import com.surveine.enqservice.domain.Enq;
 import com.surveine.enqservice.dto.*;
 import com.surveine.enqservice.service.EnqService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 
 
 @RestController
@@ -326,11 +328,33 @@ public class EnqController {
         }
     }
 
-
     /**
-     * e15. 응답지 조회 Controller
+     * e15.
+     * @param url
+     * @return
+     * @throws JsonProcessingException
      */
-    //TODO: 응답지 조회 Controller
-
+    @GetMapping("/url/{url}")
+    public ResponseEntity<Result> getAns(@RequestHeader Long memberId, @PathVariable String url) {
+        try {
+            Optional<Enq> enq = enqService.getEnqByDistLink(url);
+            AnsUrlDTO ansRspDTO = AnsUrlDTO.builder()
+                    .enq(enq.get())
+                    .member_id(memberId)
+                    .build();
+            Result result = Result.builder()
+                    .isSuccess(true)
+                    .message("응답지 불러오기 성공")
+                    .result(ansRspDTO)
+                    .build();
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            Result result = Result.builder()
+                    .isSuccess(false)
+                    .message("응답지 불러오기 실패")
+                    .build();
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
 
 }
