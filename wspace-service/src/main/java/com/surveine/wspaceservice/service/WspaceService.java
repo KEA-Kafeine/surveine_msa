@@ -52,9 +52,9 @@ public class WspaceService {
     public Map<String, Object> getWspaceCboxPage(Long cboxId, Long memberId) {
         Map<String, Object> rspMap = new HashMap<>();
 
-        rspMap.put("memberName", memberServiceClient.getMemberName(memberId));
+        rspMap.put("memName", memberServiceClient.getMemberName(memberId));
 
-        List<Cbox> cboxList = cboxRepository.findBymemberId(memberId);
+        List<Cbox> cboxList = cboxRepository.findByMemberId(memberId);
         List<CboxSNDTO> cboxDTOList = cboxList.stream()
                 .map(cbox -> CboxSNDTO.builder()
                         .cboxId(cbox.getId())
@@ -96,9 +96,9 @@ public class WspaceService {
     public Map<String, Object> getWspaceAboxPage(Long aboxId, Long memberId) {
         Map<String, Object> rspMap = new HashMap<>();
 
-        rspMap.put("memberName", memberServiceClient.getMemberName(memberId));
+        rspMap.put("memName", memberServiceClient.getMemberName(memberId));
 
-        List<Cbox> cboxList = cboxRepository.findBymemberId(memberId);
+        List<Cbox> cboxList = cboxRepository.findByMemberId(memberId);
         List<CboxSNDTO> cboxDTOList = cboxList.stream()
                 .map(cbox -> CboxSNDTO.builder()
                         .cboxId(cbox.getId())

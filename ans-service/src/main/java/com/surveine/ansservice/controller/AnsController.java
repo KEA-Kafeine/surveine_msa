@@ -2,6 +2,7 @@ package com.surveine.ansservice.controller;
 
 import com.surveine.ansservice.config.Result;
 import com.surveine.ansservice.dto.AnsCreateDTO;
+import com.surveine.ansservice.dto.AnsUpdateDTO;
 import com.surveine.ansservice.service.AnsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -49,5 +50,29 @@ public class AnsController {
         }
     }
 
-//    public ResponseEntity<Result> updateAns(@RequestHeader Long memberId, @RequestBody )
+    /**
+     * a2. 개별 응답지 수정
+     * @param ansId
+     * @param reqDTO
+     * @return
+     */
+    @PutMapping("/update/{ansId}")
+    public ResponseEntity<Result> updateAns(@PathVariable Long ansId, @RequestBody AnsUpdateDTO reqDTO) {
+        try {
+            ansService.updateAns(ansId, reqDTO);
+            Result result = Result.builder()
+                    .isSuccess(true)
+                    .message("응답 수정 성공")
+                    .build();
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            Result result = Result.builder()
+                    .isSuccess(false)
+                    .message("응답 수정 실패")
+                    .build();
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
+
+//    public ResponseEntity<Result> deleteAns(@PathVariable Long )
 }

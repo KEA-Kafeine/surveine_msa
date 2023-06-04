@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.surveine.ansservice.domain.Ans;
 import com.surveine.ansservice.dto.AnsCBDTO;
 import com.surveine.ansservice.dto.AnsCreateDTO;
+import com.surveine.ansservice.dto.AnsUpdateDTO;
 import com.surveine.ansservice.enums.AnsStatus;
 import com.surveine.ansservice.repository.AnsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -68,5 +70,19 @@ public class AnsService {
     public Boolean isAnsExists(Long memberId, Long enqId) {
         Boolean rspBool = ansRepository.existsByMemberIdAndEnqId(memberId, enqId);
         return rspBool;
+    }
+
+    @Transactional
+    public void updateAns(Long ansId, AnsUpdateDTO reqDTO) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Ans ans = ansRepository.findById(ansId).get();
+
+        Ans modifiedAns = ans.toBuilder()
+                .name(reqDTO.getName())
+                .cont(objectMapper.writeValueAsString(reqDTO.getAnsCont()))
+                .build();
+
+        ansRepository.save(modifiedAns);
     }
 }
