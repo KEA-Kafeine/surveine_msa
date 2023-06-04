@@ -25,8 +25,6 @@ import java.util.stream.Collectors;
 @Service
 public class EnqService {
     private final EnqRepository enqRepository;
-    private final MemberServiceClient memberServiceClient;
-    private final WspaceServiceClient wspaceServiceClient;
     /**
      * e1. 설문지 조회 Service
      */
@@ -69,7 +67,7 @@ public class EnqService {
     /**
      * e3. 설문지 수정 Service
      */
-    public Boolean updateEnq(Long enqId, EnqUpdateDTO reqDTO, Long memberId) throws JsonProcessingException {
+    public void updateEnq(Long enqId, EnqUpdateDTO reqDTO, Long memberId) throws JsonProcessingException {
         if(enqRepository.findById(enqId).isPresent() && reqDTO != null) {
             reqDTO.toBuilder().enqId(enqId).build();
             Optional<Enq> enq = enqRepository.findById(reqDTO.getEnqId());
@@ -80,28 +78,32 @@ public class EnqService {
                         .cont(enqContToJSON(reqDTO.getEnqCont()))
                         .build();
                 enqRepository.save(rspEnq);
-                return true;
-            } else return false;
-        }else return false;
+            } else {
+                throw new RuntimeException("오류 발생");
+            }
+        } else {
+            throw new RuntimeException("오류 발생");
+        }
     }
 
     /**
      * e4. 설문지 삭제 Service
      */
-    public Boolean deleteEnq(Long enqId, Long memberId){
+    public void deleteEnq(Long enqId, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
         //TODO: ans 테이블에서 enqId가 있는 경우 ans 삭제
         if(enq.isPresent() && enqMemberId == memberId){
             enqRepository.delete(enq.get());
-            return true;
-        }else return false;
+        } else {
+            throw new RuntimeException("오류 발생");
+        }
     }
 
     /**
      * e5. 설문지 복제 Service
      */
-    public Boolean replicEnq(Long enqId, Long memberId){
+    public void replicEnq(Long enqId, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
         if(enq.isPresent() && enqMemberId == memberId){
@@ -113,14 +115,15 @@ public class EnqService {
                     .updateDate(LocalDate.now())
                     .build();
             enqRepository.save(rspEnq);
-            return true;
-        }else return false;
+        } else {
+            throw new RuntimeException("오류 발생");
+        }
     }
 
     /**
      * e6. 설문지 이름 변경 Service
      */
-    public Boolean renameEnq(Long enqId, Map<String, String> reqMap, Long memberId){
+    public void renameEnq(Long enqId, Map<String, String> reqMap, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
         if(enq.isPresent() && enqMemberId == memberId){
@@ -129,14 +132,15 @@ public class EnqService {
                     .name(reqMap.get("enqName"))
                     .build();
             enqRepository.save(rspEnq);
-            return true;
-        }else return false;
+        } else {
+            throw new RuntimeException("오류 발생");
+        }
     }
 
     /**
      * e7. 설문지 폴더 이동 Service
      */
-    public Boolean moveEnq(Long enqId, Map<String, Long> reqMap, Long memberId){
+    public void moveEnq(Long enqId, Map<String, Long> reqMap, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
         Long currentMemberId = 1L; //TODO: 토큰 요구. 하드코딩 바꾸기
@@ -145,14 +149,15 @@ public class EnqService {
                     .cboxId(reqMap.get("cboxId"))
                     .build();
             enqRepository.save(rspEnq);
-            return true;
-        }else return false;
+        } else {
+            throw new RuntimeException("오류 발생");
+        }
     }
 
     /**
      * e8. 설문지 공유상태 변경(샌드박스에 나타내기 위한) Service
      */
-    public Boolean shareEnq(Long enqId, Long memberId){
+    public void shareEnq(Long enqId, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
         if(enq.isPresent() && enqMemberId == memberId){
@@ -160,8 +165,9 @@ public class EnqService {
                     .isShared(!enq.get().getIsShared())
                     .build();
             enqRepository.save(rspEnq);
-            return true;
-        }else return false;
+        } else {
+            throw new RuntimeException("오류 발생");
+        }
     }
 
     /**
@@ -179,7 +185,7 @@ public class EnqService {
     /**
      * e10. 설문지 배포(모달을 통한) Service
      */
-    public boolean distEnq(Long enqId, Map<String, Object> enqDistMap, Long memberId){
+    public void distEnq(Long enqId, Map<String, Object> enqDistMap, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
         if(enq.isPresent() && enqMemberId == memberId){
@@ -229,14 +235,15 @@ public class EnqService {
                         .build();
             }
             enqRepository.save(rspEnq);
-            return true;
-        }else return false;
+        } else {
+            throw new RuntimeException("오류 발생");
+        }
     }
 
     /**
      * e11. 설문지 배포상태 즉시 변경(커피콩에서) Service
      */
-    public boolean updateEnqStatus(EnqStatusDTO reqDTO, Long memberId){
+    public void updateEnqStatus(EnqStatusDTO reqDTO, Long memberId){
         Optional<Enq> enq = enqRepository.findById(reqDTO.getEnqId());
         Long enqMemberId = enq.get().getMemberId();
         if(enq.isPresent() && enqMemberId == memberId){
@@ -257,14 +264,15 @@ public class EnqService {
                         .build();
                 enqRepository.save(rspEnq);
             }
-            return true;
-        }else return false;
+        } else {
+            throw new RuntimeException("오류 발생");
+        }
     }
 
     /**
      * e12.설문지 배포 정보 삭제 Service
      */
-    public boolean deleteEnqDist(Long enqId, Long memberId){
+    public void deleteEnqDist(Long enqId, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
         if(enq.isPresent() && enqMemberId == memberId){
@@ -278,8 +286,9 @@ public class EnqService {
                     .distRange(0)
                     .build();
             enqRepository.save(rspEnq);
-            return true;
-        }else return false;
+        } else {
+            throw new RuntimeException("오류 발생");
+        }
     }
 
     /**
