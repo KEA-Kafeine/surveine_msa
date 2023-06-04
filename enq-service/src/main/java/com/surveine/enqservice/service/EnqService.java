@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -206,19 +207,16 @@ public class EnqService {
              */
             //예외처리는 controller에서 해서 할 필요가 없음.
             int quota = (int) distInfo.get("quota");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             String startDateTimeStr = (String) distInfo.get("startDateTime");
-            LocalDateTime startDateTime = startDateTimeStr.isEmpty() ? null : LocalDateTime.parse(startDateTimeStr);
+            LocalDateTime startDateTime = startDateTimeStr.isEmpty() ? null : LocalDateTime.parse(startDateTimeStr, formatter);
             String endDateTimeStr = (String) distInfo.get("endDateTime");
-            LocalDateTime endDateTime = endDateTimeStr.isEmpty() ? null : LocalDateTime.parse(endDateTimeStr);
+            LocalDateTime endDateTime = endDateTimeStr.isEmpty() ? null : LocalDateTime.parse(endDateTimeStr, formatter);
             EnqStatus enqStatus;
-            if (startDateTime != null && startDateTime.isAfter(LocalDateTime.now())) {
-                enqStatus = EnqStatus.DIST_WAIT;
-            } else if (startDateTime != null && startDateTime.isBefore(LocalDateTime.now()) && (endDateTime == null || endDateTime.isAfter(LocalDateTime.now()))) {
+            if(startDateTime == null || startDateTime.isBefore(LocalDateTime.now())) {
                 enqStatus = EnqStatus.DIST_DONE;
-            } else if (endDateTime != null && endDateTime.isBefore(LocalDateTime.now())) {
-                enqStatus = EnqStatus.ENQ_DONE;
-            } else {
-                enqStatus = EnqStatus.ENQ_MAKE; // 또는 다른 기본값 설정
+            }else{
+                enqStatus = EnqStatus.DIST_WAIT;
             }
 
             Enq rspEnq = enq.get().toBuilder()
