@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface CboxRepository extends JpaRepository<Cbox, Long> {
-    List<Cbox> findByMemberId(Long memberId);
+    List<Cbox> findBymemberId(Long memberId);
 }

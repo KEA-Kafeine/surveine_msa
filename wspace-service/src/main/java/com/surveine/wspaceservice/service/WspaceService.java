@@ -7,6 +7,7 @@ import com.surveine.wspaceservice.repository.AboxRepository;
 import com.surveine.wspaceservice.repository.CboxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class WspaceService {
     private final AboxRepository aboxRepository;
     private final CboxRepository cboxRepository;
@@ -27,6 +29,7 @@ public class WspaceService {
      * au1 - 회원가입 시 기본제작함 + 기본참여함 생성
      * @param memberId
      */
+    @Transactional
     public void createDefaultBoxes(Long memberId) {
         Cbox newCbox = Cbox.builder()
                 .memberId(memberId)
@@ -51,7 +54,7 @@ public class WspaceService {
 
         rspMap.put("memberName", memberServiceClient.getMemberName(memberId));
 
-        List<Cbox> cboxList = cboxRepository.findByMemberId(memberId);
+        List<Cbox> cboxList = cboxRepository.findBymemberId(memberId);
         List<CboxSNDTO> cboxDTOList = cboxList.stream()
                 .map(cbox -> CboxSNDTO.builder()
                         .cboxId(cbox.getId())
@@ -73,11 +76,11 @@ public class WspaceService {
 
         rspMap.put("aboxList", aboxSNDTOList);
 
-        if (cboxId == 0) { // cboxId == 0 으로 요청 시 기본제작함 Id 처리
+        if (cboxId == 0) { // cboxId == 0 으로 요청 시 사용자의 기본제작함 Id 처리
             cboxId = cboxDTOList.get(0).getCboxId();
         }
 
-        List<EnqCBDTO> enqCBDTOList = enqServiceClient.getEnqWsDTOList(cboxId);
+        List<EnqCBDTO> enqCBDTOList = enqServiceClient.getEnqCBDTOList(cboxId);
 
         Optional<Cbox> cbox = cboxRepository.findById(cboxId);
         CboxCBListDTO cboxCBListDTO = CboxCBListDTO.builder()
@@ -95,7 +98,7 @@ public class WspaceService {
 
         rspMap.put("memberName", memberServiceClient.getMemberName(memberId));
 
-        List<Cbox> cboxList = cboxRepository.findByMemberId(memberId);
+        List<Cbox> cboxList = cboxRepository.findBymemberId(memberId);
         List<CboxSNDTO> cboxDTOList = cboxList.stream()
                 .map(cbox -> CboxSNDTO.builder()
                         .cboxId(cbox.getId())
@@ -130,6 +133,7 @@ public class WspaceService {
         return rspMap;
     }
 
+    @Transactional
     public void createCbox(Long memberId, Map<String, String> cboxName) {
         Cbox cbox = Cbox.builder()
                 .name(cboxName.get("cboxName"))
@@ -138,6 +142,7 @@ public class WspaceService {
         cboxRepository.save(cbox);
     }
 
+    @Transactional
     public void createAbox(Long memberId, Map<String, String> aboxName) {
         Abox abox = Abox.builder()
                 .name(aboxName.get("aboxName"))
@@ -146,6 +151,7 @@ public class WspaceService {
         aboxRepository.save(abox);
     }
 
+    @Transactional
     public void renameCbox(Long cboxId, Map<String, String> cboxName) {
         Optional<Cbox> currentCbox = cboxRepository.findById(cboxId);
         if (currentCbox.isPresent()) {
@@ -158,6 +164,7 @@ public class WspaceService {
         }
     }
 
+    @Transactional
     public void renameAbox(Long aboxId, Map<String, String> aboxName) {
         Optional<Abox> currentAbox = aboxRepository.findById(aboxId);
         if (currentAbox.isPresent()) {
