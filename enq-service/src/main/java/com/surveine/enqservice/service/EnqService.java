@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.surveine.enqservice.domain.Enq;
 import com.surveine.enqservice.dto.*;
 import com.surveine.enqservice.dto.enqcont.EnqContDTO;
+import com.surveine.enqservice.enums.DistType;
 import com.surveine.enqservice.repository.EnqRepository;
 import enums.DistType;
 import enums.EnqStatus;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -303,7 +305,7 @@ public class EnqService {
 
 
     public Long getEnqCountByMemberId(Long memberId) {
-        Long enqCountByMemberId = enqRepository.countByMember(memberId);
+        Long enqCountByMemberId = enqRepository.countByMemberId(memberId);
         return enqCountByMemberId;
     }
 
@@ -327,5 +329,23 @@ public class EnqService {
     }
 
 
+    public Long getEnqCountByCboxId(Long cboxId) {
+        Long enqCountByCboxId = enqRepository.countById(cboxId);
+        return enqCountByCboxId;
+    }
 
+    public List<EnqWsDTO> getEnqWsDTOList(Long cboxId) {
+        List<Enq> enqList = enqRepository.findEnqByCboxId(cboxId);
+        List<EnqWsDTO> enqWsDTOList = enqList.stream()
+                .map(enq -> EnqWsDTO.builder()
+                        .enq(enq)
+                        .build())
+                .collect(Collectors.toList());
+        return enqWsDTOList;
+    }
+
+    public DistType getDistTypeByEnqId(Long enqId) {
+        DistType distType = enqRepository.findById(enqId).get().getDistType();
+        return distType;
+    }
 }

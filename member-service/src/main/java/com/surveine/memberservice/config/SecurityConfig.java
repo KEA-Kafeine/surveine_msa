@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         AuthenticationFilter authenticationFilter =
                 new AuthenticationFilter(authenticationManagerBean(), tokenProvider, refreshTokenService);
-        authenticationFilter.setFilterProcessesUrl("/login");
+        authenticationFilter.setFilterProcessesUrl("/auth/login");
 
         http.csrf().disable();
 

@@ -14,13 +14,13 @@ public class HeaderAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        if (request.getServletPath().equals("/login")) {
+        if (request.getServletPath().equals("/auth/login")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String email = request.getHeader("jwt-sub");
-        log.info("email jwt-sub = {}", email);
+//        String email = request.getHeader("jwt-sub");
+//        log.info("email jwt-sub = {}", email);
 
         filterChain.doFilter(request, response);
     }

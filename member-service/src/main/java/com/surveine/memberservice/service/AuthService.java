@@ -7,13 +7,16 @@ import com.surveine.memberservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
 public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final WspaceServiceClient wspaceServiceClient;
 
+    @Transactional
     public void createMember(MemberSignupReqDTO reqDTO) {
 
         if (memberRepository.existsByEmail(reqDTO.getEmail())) {
@@ -29,6 +32,8 @@ public class AuthService {
                 .authority(Authority.ROLE_USER)
                 .build();
 
-        memberRepository.save(newMember);
+        Long nowMemberId = memberRepository.save(newMember).getId();
+
+        wspaceServiceClient.createDefaultBoxes(nowMemberId);
     }
 }

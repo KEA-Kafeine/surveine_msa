@@ -24,32 +24,48 @@ spring:
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
-            - Path=/member-service/signup
+            - Path=/api/auth/signup
             - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
-            - Path=/member-service/login
+            - Path=/api/auth/login
             - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
-            - Path=/member-service/**
+            - Path=/api/member/**
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+        - id: wspace-service
+          uri: lb://WSPACE-SERVICE
+          predicates:
+            - Path=/api/wspace/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
         - id: enq-service
           uri: lb://ENQ-SERVICE
           predicates:
-            - Path=/enq-service/**
+            - Path=/api/enq/**
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/enq-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+        - id: ans-service
+          uri: lb://ANS-SERVICE
+          predicates:
+            - Path=/api/ans/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
