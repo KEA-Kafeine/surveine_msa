@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/enq")
+@RequestMapping("/enq")
 public class EnqController {
     private final EnqService enqService;
 
@@ -26,14 +26,14 @@ public class EnqController {
         if(rspEnq != null) {
             Result result = Result.builder()
                     .isSuccess(false)
-                    .message("설문 조회 실패")
+                    .message("설문지 조회 성공")
                     .result(rspEnq)
                     .build();
             return ResponseEntity.ok(result);
         }else{
             Result result = Result.builder()
                     .isSuccess(false)
-                    .message("워크스페이스 호출 실패")
+                    .message("설문지 조회 실패")
                     .build();
             return ResponseEntity.badRequest().body(result);
         }
@@ -74,14 +74,16 @@ public class EnqController {
      */
     @PutMapping("/update/{enqId}")
     public ResponseEntity<Result> updateEnq(@PathVariable Long enqId, @RequestBody EnqUpdateDTO reqDTO, @RequestHeader Long memberId) throws JsonProcessingException {
-        if(enqService.updateEnq(enqId, reqDTO, memberId)){
+        try{
+            enqService.updateEnq(enqId, reqDTO, memberId);
+
             Result result = Result.builder()
                     .isSuccess(true)
                     .result(reqDTO)
                     .message("설문지 수정 성공")
                     .build();
             return ResponseEntity.ok(result);
-        }else {
+        }catch (Exception e){
             Result result = Result.builder()
                     .isSuccess(false)
                     .message("설문지 수정 실패")
@@ -95,13 +97,14 @@ public class EnqController {
      */
     @DeleteMapping("/{enqId}")
     public ResponseEntity<Result> deleteEnq(@PathVariable Long enqId, @RequestHeader Long memberId){
-        if(enqService.deleteEnq(enqId, memberId)) {
+        try{
+            enqService.deleteEnq(enqId, memberId);
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 삭제 성공")
                     .build();
             return ResponseEntity.ok(result);
-        }else{
+        }catch (Exception e){
             Result result = Result.builder()
                     .isSuccess(false)
                     .message("설문지 삭제 실패")
@@ -115,13 +118,14 @@ public class EnqController {
      */
     @PutMapping("/replic/{enqId}")
     public ResponseEntity<Result> replicEnq(@PathVariable Long enqId, @RequestHeader Long memberId){
-        if(enqService.replicEnq(enqId, memberId)){
+        try{
+            enqService.replicEnq(enqId, memberId);
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 복제 성공")
                     .build();
             return ResponseEntity.ok(result);
-        }else{
+        }catch (Exception e){
             Result result = Result.builder()
                     .isSuccess(false)
                     .message("설문지 복제 실패")
@@ -135,13 +139,14 @@ public class EnqController {
      */
     @PutMapping("/rename/{enqId}")
     public ResponseEntity<Result> renameEnq(@PathVariable Long enqId, @RequestBody Map<String, String> reqMap, @RequestHeader Long memberId){
-        if(enqService.renameEnq(enqId, reqMap, memberId)){
+        try{
+            enqService.renameEnq(enqId, reqMap, memberId);
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 이름 변경 성공")
                     .build();
             return ResponseEntity.ok(result);
-        }else{
+        }catch (Exception e){
             Result result = Result.builder()
                     .isSuccess(false)
                     .message("설문지 이름 변경 실패")
@@ -155,13 +160,14 @@ public class EnqController {
      */
     @PutMapping("/move/{enqId}")
     public ResponseEntity<Result> moveEnq(@PathVariable Long enqId, @RequestBody Map<String, Long> reqMap, @RequestHeader Long memberId){
-        if(enqService.moveEnq(enqId, reqMap, memberId)){
+        try{
+            enqService.moveEnq(enqId, reqMap, memberId);
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 폴더 이동 성공")
                     .build();
             return ResponseEntity.ok(result);
-        }else{
+        }catch (Exception e){
             Result result = Result.builder()
                     .isSuccess(false)
                     .message("설문지 폴더 이동 실패")
@@ -175,13 +181,14 @@ public class EnqController {
      */
     @PutMapping("/share/{enqId}")
     public ResponseEntity<Result> shareEnq(@PathVariable Long enqId, @RequestHeader Long memberId) {
-        if(enqService.shareEnq(enqId, memberId)){
+        try{
+            enqService.shareEnq(enqId, memberId);
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 공유상태 변경 성공")
                     .build();
             return ResponseEntity.ok(result);
-        }else{
+        }catch (Exception e){
             Result result = Result.builder()
                     .isSuccess(false)
                     .message("설문지 공유상태 변경 실패")
@@ -217,13 +224,14 @@ public class EnqController {
      */
     @PutMapping("/dist/{enqId}")
     public ResponseEntity<Result> distEnq(@PathVariable Long enqId, @RequestBody Map<String, Object> enqDistMap, @RequestHeader Long memberId){
-        if(enqService.distEnq(enqId, enqDistMap, memberId)) {
+        try{
+            enqService.distEnq(enqId, enqDistMap, memberId);
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 배포 성공")
                     .build();
             return ResponseEntity.ok(result);
-        }else{
+        }catch (Exception e){
             Result result = Result.builder()
                     .isSuccess(false)
                     .message("설문지 배포 실패")
@@ -237,13 +245,14 @@ public class EnqController {
      */
     @PutMapping("/dist/status")
     public ResponseEntity<Result> updateEnqStatus(@RequestBody EnqStatusDTO reqDTO, @RequestHeader Long memberId){
-        if(enqService.updateEnqStatus(reqDTO, memberId)){
+        try{
+            enqService.updateEnqStatus(reqDTO, memberId);
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 배포상태 변경 성공")
                     .build();
             return ResponseEntity.ok(result);
-        }else{
+        }catch (Exception e){
             Result result = Result.builder()
                     .isSuccess(false)
                     .message("설문지 배포상태 변경 실패")
@@ -257,13 +266,14 @@ public class EnqController {
      */
     @PutMapping("/dist/delete/{enqId}")
     public ResponseEntity<Result> deleteEnqDist(@PathVariable Long enqId, @RequestHeader Long memberId){
-        if(enqService.deleteEnqDist(enqId, memberId)){
+        try {
+            enqService.deleteEnqDist(enqId, memberId);
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 배포 정보 삭제 성공")
                     .build();
             return ResponseEntity.ok(result);
-        }else{
+        }catch (Exception e){
             Result result = Result.builder()
                     .isSuccess(false)
                     .message("설문지 배포 정보 삭제 실패")
