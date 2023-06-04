@@ -13,4 +13,6 @@ public interface AnsRepository extends JpaRepository<Ans, Long> {
     Long countByAboxId(Long aboxId);
 
     List<Ans> findAnsByAboxId(Long aboxId);
+
+    Boolean existsByMemberIdAndEnqId(Long memberId, Long enqId);
 }

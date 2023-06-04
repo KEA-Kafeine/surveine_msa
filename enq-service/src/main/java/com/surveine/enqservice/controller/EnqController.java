@@ -30,7 +30,7 @@ public class EnqController {
                     .result(rspEnq)
                     .build();
             return ResponseEntity.ok(result);
-        }else{
+        } else {
             Result result = Result.builder()
                     .isSuccess(false)
                     .message("워크스페이스 호출 실패")

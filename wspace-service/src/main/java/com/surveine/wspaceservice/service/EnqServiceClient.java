@@ -8,9 +8,9 @@ import java.util.List;
 
 @FeignClient(name = "enq-service")
 public interface EnqServiceClient {
-    @GetMapping("/enq-service/ws1/{cboxId}")
+    @GetMapping("/enq-service/ws1/count/{cboxId}")
     Long getEnqCountByCboxId(Long cboxId);
 
-    @GetMapping("/enq-service/ws1/{cboxId}")
+    @GetMapping("/enq-service/ws1/list/{cboxId}")
     List<EnqCBDTO> getEnqWsDTOList(Long cboxId);
 }

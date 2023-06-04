@@ -23,13 +23,13 @@ public class EnqFeignController {
         return result;
     }
 
-    @GetMapping("/enq-service/ws1/{cboxId}")
+    @GetMapping("/enq-service/ws1/count/{cboxId}")
     Long getEnqCountByCboxId(Long cboxId) {
         Long result = enqService.getEnqCountByCboxId(cboxId);
         return result;
     }
 
-    @GetMapping("/enq-service/ws1/{cboxId}")
+    @GetMapping("/enq-service/ws1/list/{cboxId}")
     List<EnqWsDTO> getEnqWsDTOList(Long cboxId) {
         List<EnqWsDTO> rspList = enqService.getEnqWsDTOList(cboxId);
         return rspList;
