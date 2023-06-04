@@ -13,4 +13,6 @@ public interface EnqRepository extends JpaRepository<Enq, Long> {
     Long countById(Long cboxId);
 
     List<Enq> findEnqByCboxId(Long cboxId);
+
+    List<Enq> findByIsSharedTrue();
 }
