@@ -21,8 +21,8 @@ public class EnqController {
      * e1. 설문지 조회 Controller
      */
     @GetMapping("/{enqId}")
-    public ResponseEntity<Result> getEnq(@PathVariable Long enqId) throws JsonProcessingException {
-        EnqRspDTO rspEnq = enqService.getEnq(enqId);
+    public ResponseEntity<Result> getEnq(@PathVariable Long enqId, @RequestHeader Long memberId) throws JsonProcessingException {
+        EnqRspDTO rspEnq = enqService.getEnq(enqId, memberId);
         if(rspEnq != null) {
             Result result = Result.builder()
                     .isSuccess(false)
@@ -43,8 +43,8 @@ public class EnqController {
      * e2. 설문지 생성 Controller
      */
     @PutMapping("/create")
-    public ResponseEntity<Result> createEnq(@RequestBody EnqCreateDTO reqDTO) throws JsonProcessingException {
-        Long enqId = enqService.createEnq(reqDTO);
+    public ResponseEntity<Result> createEnq(@RequestBody EnqCreateDTO reqDTO, @RequestHeader Long memberId) throws JsonProcessingException {
+        Long enqId = enqService.createEnq(reqDTO, memberId);
         if(enqId > 0L){
             EnqCreateRspDTO createRspDTO = EnqCreateRspDTO.builder()
                     .enqName(reqDTO.getEnqName())
@@ -73,8 +73,8 @@ public class EnqController {
      * e3. 설문지 수정 Controller
      */
     @PutMapping("/update/{enqId}")
-    public ResponseEntity<Result> updateEnq(@PathVariable Long enqId, @RequestBody EnqUpdateDTO reqDTO) throws JsonProcessingException {
-        if(enqService.updateEnq(enqId, reqDTO)){
+    public ResponseEntity<Result> updateEnq(@PathVariable Long enqId, @RequestBody EnqUpdateDTO reqDTO, @RequestHeader Long memberId) throws JsonProcessingException {
+        if(enqService.updateEnq(enqId, reqDTO, memberId)){
             Result result = Result.builder()
                     .isSuccess(true)
                     .result(reqDTO)
@@ -94,8 +94,8 @@ public class EnqController {
      * e4. 설문지 삭제 Controller
      */
     @DeleteMapping("/{enqId}")
-    public ResponseEntity<Result> deleteEnq(@PathVariable Long enqId){
-        if(enqService.deleteEnq(enqId)) {
+    public ResponseEntity<Result> deleteEnq(@PathVariable Long enqId, @RequestHeader Long memberId){
+        if(enqService.deleteEnq(enqId, memberId)) {
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 삭제 성공")
@@ -114,8 +114,8 @@ public class EnqController {
      * e5. 설문지 복제 Controller
      */
     @PutMapping("/replic/{enqId}")
-    public ResponseEntity<Result> replicEnq(@PathVariable Long enqId){
-        if(enqService.replicEnq(enqId)){
+    public ResponseEntity<Result> replicEnq(@PathVariable Long enqId, @RequestHeader Long memberId){
+        if(enqService.replicEnq(enqId, memberId)){
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 복제 성공")
@@ -134,8 +134,8 @@ public class EnqController {
      * e6. 설문지 이름 변경 Controller
      */
     @PutMapping("/rename/{enqId}")
-    public ResponseEntity<Result> renameEnq(@PathVariable Long enqId, @RequestBody EnqRenameDTO reqDTO){
-        if(enqService.renameEnq(enqId, reqDTO)){
+    public ResponseEntity<Result> renameEnq(@PathVariable Long enqId, @RequestBody Map<String, String> reqMap, @RequestHeader Long memberId){
+        if(enqService.renameEnq(enqId, reqMap, memberId)){
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 이름 변경 성공")
@@ -154,8 +154,8 @@ public class EnqController {
      * e7. 설문지 폴더 이동 Controller
      */
     @PutMapping("/move/{enqId}")
-    public ResponseEntity<Result> moveEnq(@PathVariable Long enqId, @RequestBody EnqMoveDTO reqDTO){
-        if(enqService.moveEnq(enqId, reqDTO)){
+    public ResponseEntity<Result> moveEnq(@PathVariable Long enqId, @RequestBody Map<String, Long> reqMap, @RequestHeader Long memberId){
+        if(enqService.moveEnq(enqId, reqMap, memberId)){
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 폴더 이동 성공")
@@ -174,8 +174,8 @@ public class EnqController {
      * e8. 설문지 공유상태 변경(샌드박스에 나타내기 위한) Controller
      */
     @PutMapping("/share/{enqId}")
-    public ResponseEntity<Result> shareEnq(@PathVariable Long enqId) {
-        if(enqService.shareEnq(enqId)){
+    public ResponseEntity<Result> shareEnq(@PathVariable Long enqId, @RequestHeader Long memberId) {
+        if(enqService.shareEnq(enqId, memberId)){
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 공유상태 변경 성공")
@@ -194,8 +194,8 @@ public class EnqController {
      * e9. 설문지 배포 정보 조회 Controller
      */
     @GetMapping("/dist/{enqId}")
-    public ResponseEntity<Result> getEnqDist(@PathVariable Long enqId) throws JsonProcessingException {
-        EnqDistRspDTO rspDTO = enqService.getEnqDist(enqId);
+    public ResponseEntity<Result> getEnqDist(@PathVariable Long enqId, @RequestHeader Long memberId) throws JsonProcessingException {
+        EnqDistRspDTO rspDTO = enqService.getEnqDist(enqId, memberId);
         if(rspDTO != null){
             Result result = Result.builder()
                     .isSuccess(true)
@@ -216,8 +216,8 @@ public class EnqController {
      * e10. 설문지 배포(모달을 통한) Controller
      */
     @PutMapping("/dist/{enqId}")
-    public ResponseEntity<Result> distEnq(@PathVariable Long enqId, @RequestBody Map<String, Object> enqDistMap){
-        if(enqService.distEnq(enqId, enqDistMap)) {
+    public ResponseEntity<Result> distEnq(@PathVariable Long enqId, @RequestBody Map<String, Object> enqDistMap, @RequestHeader Long memberId){
+        if(enqService.distEnq(enqId, enqDistMap, memberId)) {
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 배포 성공")
@@ -236,8 +236,8 @@ public class EnqController {
      * e11. 설문지 배포상태 즉시 변경(커피콩에서)
      */
     @PutMapping("/dist/status")
-    public ResponseEntity<Result> updateEnqStatus(@RequestBody EnqStatusDTO reqDTO){
-        if(enqService.updateEnqStatus(reqDTO)){
+    public ResponseEntity<Result> updateEnqStatus(@RequestBody EnqStatusDTO reqDTO, @RequestHeader Long memberId){
+        if(enqService.updateEnqStatus(reqDTO, memberId)){
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 배포상태 변경 성공")
@@ -256,8 +256,8 @@ public class EnqController {
      * e12.설문지 배포 정보 삭제 Controller
      */
     @PutMapping("/dist/delete/{enqId}")
-    public ResponseEntity<Result> deleteEnqDist(@PathVariable Long enqId){
-        if(enqService.deleteEnqDist(enqId)){
+    public ResponseEntity<Result> deleteEnqDist(@PathVariable Long enqId, @RequestHeader Long memberId){
+        if(enqService.deleteEnqDist(enqId, memberId)){
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("설문지 배포 정보 삭제 성공")
@@ -276,8 +276,8 @@ public class EnqController {
      * e13. 설문지 배포 링크 조회 Controller
      */
     @GetMapping("/dist/link/{enqId}")
-    public ResponseEntity<Result> getEnqDistLink(@PathVariable Long enqId){
-        String link = enqService.getEnqDistLink(enqId);
+    public ResponseEntity<Result> getEnqDistLink(@PathVariable Long enqId, @RequestHeader Long memberId){
+        String link = enqService.getEnqDistLink(enqId, memberId);
         if(link != null){
             Result result = Result.builder()
                     .isSuccess(true)

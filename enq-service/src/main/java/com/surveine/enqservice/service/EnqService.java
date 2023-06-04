@@ -7,9 +7,8 @@ import com.surveine.enqservice.domain.Enq;
 import com.surveine.enqservice.dto.*;
 import com.surveine.enqservice.dto.enqcont.EnqContDTO;
 import com.surveine.enqservice.enums.DistType;
+import com.surveine.enqservice.enums.EnqStatus;
 import com.surveine.enqservice.repository.EnqRepository;
-import enums.DistType;
-import enums.EnqStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +30,10 @@ public class EnqService {
     /**
      * e1. 설문지 조회 Service
      */
-    public EnqRspDTO getEnq(Long enqId) throws JsonProcessingException {
+    public EnqRspDTO getEnq(Long enqId, Long memberId) throws JsonProcessingException {
         Optional<Enq> enq =  enqRepository.findById(enqId);
-        if(enq.isPresent()){
+        Long enqMemberId = enq.get().getMemberId();
+        if(enq.isPresent() && memberId == enqMemberId){
             return EnqRspDTO.builder()
                     .enq(enq.get())
                     .build();
@@ -46,11 +46,10 @@ public class EnqService {
     /**
      * e2. 설문지 생성 Service
      */
-    public Long createEnq(EnqCreateDTO reqDTO) throws JsonProcessingException {
+    public Long createEnq(EnqCreateDTO reqDTO, Long memberId) throws JsonProcessingException {
         if(reqDTO != null){
-            Long currentMemberId = 1L; //TODO: 토큰 요구. 하드코딩 바꾸기
             Enq enq = Enq.builder()
-                    .memberId(currentMemberId)
+                    .memberId(memberId)
                     .cboxId(reqDTO.getCboxId())
                     .name(reqDTO.getEnqName())
                     .title(reqDTO.getEnqTitle())
@@ -70,12 +69,11 @@ public class EnqService {
     /**
      * e3. 설문지 수정 Service
      */
-    public Boolean updateEnq(Long enqId, EnqUpdateDTO reqDTO) throws JsonProcessingException {
+    public Boolean updateEnq(Long enqId, EnqUpdateDTO reqDTO, Long memberId) throws JsonProcessingException {
         if(enqRepository.findById(enqId).isPresent() && reqDTO != null) {
             reqDTO.toBuilder().enqId(enqId).build();
             Optional<Enq> enq = enqRepository.findById(reqDTO.getEnqId());
-            Long currentMemberId = 1L; //TODO: 토큰 요구. 하드코딩 바꾸기
-            if(currentMemberId == enq.get().getMemberId()){ //TODO: ? && currentMemberId == reqEnq.get().getCbox().getMember().getId())
+            if(memberId == enq.get().getMemberId()){
                 Enq rspEnq = enq.get()
                         .toBuilder()
                         .name(reqDTO.getEnqName())
@@ -90,11 +88,11 @@ public class EnqService {
     /**
      * e4. 설문지 삭제 Service
      */
-    public Boolean deleteEnq(Long enqId){
+    public Boolean deleteEnq(Long enqId, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
-        Long currentMemberId = 1L; //TODO: 토큰 요구. 하드코딩 바꾸기
-        if(enq.isPresent() && enqMemberId == currentMemberId){
+        //TODO: ans 테이블에서 enqId가 있는 경우 ans 삭제
+        if(enq.isPresent() && enqMemberId == memberId){
             enqRepository.delete(enq.get());
             return true;
         }else return false;
@@ -103,11 +101,10 @@ public class EnqService {
     /**
      * e5. 설문지 복제 Service
      */
-    public Boolean replicEnq(Long enqId){
+    public Boolean replicEnq(Long enqId, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
-        Long currentMemberId = 1L; //TODO: 토큰 요구. 하드코딩 바꾸기
-        if(enq.isPresent() && enqMemberId == currentMemberId){
+        if(enq.isPresent() && enqMemberId == memberId){
             Enq rspEnq = enq.get()
                     .toBuilder().id(null)
                     .favCount(0L)
@@ -123,14 +120,13 @@ public class EnqService {
     /**
      * e6. 설문지 이름 변경 Service
      */
-    public Boolean renameEnq(Long enqId, EnqRenameDTO reqDTO){
+    public Boolean renameEnq(Long enqId, Map<String, String> reqMap, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
-        Long currentMemberId = 1L; //TODO: 토큰 요구. 하드코딩 바꾸기
-        if(enq.isPresent() && enqMemberId == currentMemberId){
+        if(enq.isPresent() && enqMemberId == memberId){
             Enq rspEnq = enq.get()
                     .toBuilder()
-                    .name(reqDTO.getEnqName())
+                    .name(reqMap.get("enqName"))
                     .build();
             enqRepository.save(rspEnq);
             return true;
@@ -140,13 +136,13 @@ public class EnqService {
     /**
      * e7. 설문지 폴더 이동 Service
      */
-    public Boolean moveEnq(Long enqId, EnqMoveDTO reqDTO){
+    public Boolean moveEnq(Long enqId, Map<String, Long> reqMap, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
         Long currentMemberId = 1L; //TODO: 토큰 요구. 하드코딩 바꾸기
         if(enq.isPresent() && enqMemberId == currentMemberId){
             Enq rspEnq = enq.get().toBuilder()
-                    .cboxId(reqDTO.getCboxId())
+                    .cboxId(reqMap.get("cboxId"))
                     .build();
             enqRepository.save(rspEnq);
             return true;
@@ -156,11 +152,10 @@ public class EnqService {
     /**
      * e8. 설문지 공유상태 변경(샌드박스에 나타내기 위한) Service
      */
-    public Boolean shareEnq(Long enqId){
+    public Boolean shareEnq(Long enqId, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
-        Long currentMemberId = 1L; //TODO: 토큰 요구. 하드코딩 바꾸기
-        if(enq.isPresent() && enqMemberId == currentMemberId){
+        if(enq.isPresent() && enqMemberId == memberId){
             Enq rspEnq = enq.get().toBuilder()
                     .isShared(!enq.get().getIsShared())
                     .build();
@@ -172,10 +167,9 @@ public class EnqService {
     /**
      * e9. 설문지 배포 정보 조회 Service
      */
-    public EnqDistRspDTO getEnqDist(Long enqId) throws JsonProcessingException {
+    public EnqDistRspDTO getEnqDist(Long enqId, Long memberId) throws JsonProcessingException {
         Optional<Enq> enq = enqRepository.findById(enqId);
-        Long currentMemberId = 1L; //TODO: 토큰 요구. 하드코딩 바꾸기
-        if(enq.isPresent() && enq.get().getMemberId() == currentMemberId && !(enq.get().getEnqStatus().equals(EnqStatus.ENQ_MAKE.toString()))) {
+        if(enq.isPresent() && enq.get().getMemberId() == memberId && !(enq.get().getEnqStatus().equals(EnqStatus.ENQ_MAKE.toString()))) {
             return EnqDistRspDTO.builder()
                     .enq(enq.get())
                     .build();
@@ -185,11 +179,10 @@ public class EnqService {
     /**
      * e10. 설문지 배포(모달을 통한) Service
      */
-    public boolean distEnq(Long enqId, Map<String, Object> enqDistMap){
+    public boolean distEnq(Long enqId, Map<String, Object> enqDistMap, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
-        Long currentMemberId = 1L; //TODO: 토큰 요구. 하드코딩 바꾸기
-        if(enq.isPresent() && enqMemberId == currentMemberId){
+        if(enq.isPresent() && enqMemberId == memberId){
             String distType = (String) enqDistMap.get("distType");
             Map<String, Object> distInfo = (Map<String, Object>) enqDistMap.get("distInfo");
             /**
@@ -243,11 +236,10 @@ public class EnqService {
     /**
      * e11. 설문지 배포상태 즉시 변경(커피콩에서) Service
      */
-    public boolean updateEnqStatus(EnqStatusDTO reqDTO){
+    public boolean updateEnqStatus(EnqStatusDTO reqDTO, Long memberId){
         Optional<Enq> enq = enqRepository.findById(reqDTO.getEnqId());
         Long enqMemberId = enq.get().getMemberId();
-        Long currentMemberId = 1L; //TODO: 토큰 요구. 하드코딩 바꾸기
-        if(enq.isPresent() && enqMemberId == currentMemberId){
+        if(enq.isPresent() && enqMemberId == memberId){
             EnqStatus enqStatus = enq.get().getEnqStatus();
             // 배포 예약 -> 배포 시작일 경우: 배포 시작 날짜를 지금으로 바꿔야 함.
             if(enqStatus == EnqStatus.DIST_DONE){
@@ -272,11 +264,10 @@ public class EnqService {
     /**
      * e12.설문지 배포 정보 삭제 Service
      */
-    public boolean deleteEnqDist(Long enqId){
+    public boolean deleteEnqDist(Long enqId, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
-        Long currentMemberId = 1L; //TODO: 토큰 요구. 하드코딩 바꾸기
-        if(enq.isPresent() && enqMemberId == currentMemberId){
+        if(enq.isPresent() && enqMemberId == memberId){
             Enq rspEnq = enq.get().toBuilder()
                     .enqStatus(EnqStatus.ENQ_MAKE)
                     .quota(0)
@@ -294,10 +285,10 @@ public class EnqService {
     /**
      * e13. 설문지 배포 링크 조회 Service
      */
-    public String getEnqDistLink(Long enqId) {
+    public String getEnqDistLink(Long enqId, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         String baseUrl = "surveine.com/answer/";
-        if (enq.isPresent()) {
+        if (enq.isPresent() && enq.get().getMemberId() == memberId) {
             String distLink = baseUrl + enq.get().getDistLink();
             return distLink;
         } else return null;

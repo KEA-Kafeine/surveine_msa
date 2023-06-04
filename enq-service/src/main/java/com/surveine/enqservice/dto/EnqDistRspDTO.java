@@ -2,7 +2,7 @@ package com.surveine.enqservice.dto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.surveine.enqservice.domain.Enq;
-import enums.DistType;
+import com.surveine.enqservice.enums.DistType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

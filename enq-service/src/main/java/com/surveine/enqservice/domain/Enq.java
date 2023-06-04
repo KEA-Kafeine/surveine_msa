@@ -11,6 +11,7 @@ import org.springframework.data.geo.GeoModule;
 
 import javax.persistence.*;
 import java.awt.*;
+import java.nio.Buffer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -62,9 +63,6 @@ public class Enq {
     @Column(name = "enq_report")
     private Long enqReport;
 
-    @Column(name = "geo_buffer")
-    private GeoModule geoBuffer;
-
 
     /**
      * 배포관련 컬럼
@@ -92,6 +90,9 @@ public class Enq {
 
     @Column(name = "dist_range")
     private Integer distRange;
+
+    @Column(name = "geo_buffer")
+    private GeoModule geoBuffer;
 
     @Builder(toBuilder = true)
     public Enq(Long id, Long memberId, Long cboxId, String name, String title, String cont, Boolean isShared, EnqStatus enqStatus, DistType distType, LocalDate updateDate, Long favCount, String enqAnalysis, Long enqReport, GeoModule geoBuffer, Integer quota, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer ansedCnt, String distLink, Point myLocation, Integer distRange) {
