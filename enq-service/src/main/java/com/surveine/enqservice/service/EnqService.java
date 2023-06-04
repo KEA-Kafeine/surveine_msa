@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.surveine.enqservice.domain.Enq;
 import com.surveine.enqservice.dto.*;
+import com.surveine.enqservice.dto.analysis.AnsQstDTO;
 import com.surveine.enqservice.dto.enqcont.EnqContDTO;
 import com.surveine.enqservice.enums.DistType;
 import com.surveine.enqservice.enums.EnqStatus;
@@ -382,5 +383,33 @@ public class EnqService {
                 .distRange(enq.getDistRange())
                 .build();
         enqRepository.save(modifiedEnq);
+    }
+
+    /**
+     * 결과분석 추가할 때 맵핑하는 함수
+     * @param saveFile
+     * @return
+     * @throws JsonProcessingException
+     */
+    public static List<AnsQstDTO> setAnsAnalysis(String saveFile) throws JsonProcessingException{
+        if(saveFile == null){
+            return Collections.emptyList();
+        } else {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(saveFile, new TypeReference<List<AnsQstDTO>>() {});
+        }
+    }
+
+    public AnsAnalysisDTO getAnalysis(Long enqID) throws JsonProcessingException {
+        Optional<Enq> enq = enqRepository.findById(enqID);
+        if(enq.isPresent()){
+            Enq curEnq = enq.get();
+            AnsAnalysisDTO rspDTO = AnsAnalysisDTO.builder()
+                    .ansQstDto(setAnsAnalysis(curEnq.getEnqAnalysis()))
+                    .build();
+            return rspDTO;
+        } else{
+            throw new RuntimeException("결과 분석 호출 오류");
+        }
     }
 }

@@ -307,7 +307,24 @@ public class EnqController {
     /**
      * e14. 설문지 결과 조회 Controller
      */
-    //TODO: 설문지 결과 조회 Controller
+    @GetMapping("/result/{enqID}")
+    public ResponseEntity<Result> getAnalysis(@PathVariable Long enqID) {
+        try {
+            AnsAnalysisDTO rspDTO = enqService.getAnalysis(enqID);
+            Result result = Result.builder()
+                    .message("결과 분석 불러오기 성공")
+                    .isSuccess(true)
+                    .result(rspDTO)
+                    .build();
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            Result result = Result.builder()
+                    .isSuccess(false)
+                    .message("결과 분석 불러오기 실패")
+                    .build();
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
 
 
     /**

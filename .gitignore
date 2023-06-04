@@ -10,3 +10,6 @@
 .idea/vcs.xml
 .idea/workspace.xml
 .DS_Store
+.idea/dataSources.local.xml
+.idea/dataSources.local.xml
+*.xml
