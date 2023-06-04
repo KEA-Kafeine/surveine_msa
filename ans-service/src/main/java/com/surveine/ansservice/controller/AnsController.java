@@ -97,7 +97,21 @@ public class AnsController {
         }
     }
 
-//    public ResponseEntity<Result>
+//    public ResponseEntity<Result> submitAns(@RequestHeader Long memberId, @PathVariable Long ansId) {
+//        try {
+//            Result result = Result.builder()
+//                    .isSuccess(true)
+//                    .message("응답지 제출 성공")
+//                    .build();
+//            return ResponseEntity.ok().body(result);
+//        } catch (Exception e) {
+//            Result result = Result.builder()
+//                    .isSuccess(false)
+//                    .message("응답지 제출 실패")
+//                    .build();
+//            return ResponseEntity.badRequest().body(result);
+//        }
+//    }
 
     /**
      * a5. 개별 응답지 폴더이동
@@ -105,6 +119,7 @@ public class AnsController {
      * @param aboxId
      * @return
      */
+    @PutMapping("/move/{ansId}")
     public ResponseEntity<Result> moveAns(@PathVariable Long ansId, @RequestBody Map<String, Long> aboxId) {
         try {
             ansService.moveAns(ansId, aboxId);

@@ -25,8 +25,13 @@ import java.util.stream.Collectors;
 @Service
 public class EnqService {
     private final EnqRepository enqRepository;
+
     /**
      * e1. 설문지 조회 Service
+     * @param enqId
+     * @param memberId
+     * @return
+     * @throws JsonProcessingException
      */
     public EnqRspDTO getEnq(Long enqId, Long memberId) throws JsonProcessingException {
         Optional<Enq> enq =  enqRepository.findById(enqId);
