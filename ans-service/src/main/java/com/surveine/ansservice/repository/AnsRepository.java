@@ -1,6 +1,7 @@
 package com.surveine.ansservice.repository;
 
 import com.surveine.ansservice.domain.Ans;
+import com.surveine.ansservice.enums.AnsStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,6 @@ public interface AnsRepository extends JpaRepository<Ans, Long> {
     List<Ans> findAnsByAboxId(Long aboxId);
 
     Boolean existsByMemberIdAndEnqId(Long memberId, Long enqId);
+
+    List<Ans> findByEnqId(Long enqId);
 }

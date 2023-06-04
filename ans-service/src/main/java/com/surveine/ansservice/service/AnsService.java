@@ -14,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +22,7 @@ import java.util.stream.Collectors;
 public class AnsService {
     private final AnsRepository ansRepository;
     private final EnqServiceClient enqServiceClient;
+    private final MemberServiceClient memberServiceClient;
 
     public Long getAnsCountByMemberId(Long memberId) {
         Long ansCountByMemberId = ansRepository.countByMemberId(memberId);
@@ -118,5 +116,52 @@ public class AnsService {
         } else {
             throw new RuntimeException("오류 발생");
         }
+    }
+
+    public List<String> pickRandom(Map<String, Long> reqMap) {
+        Long num = reqMap.get("num");
+        List<Ans> ansList = ansRepository.findByEnqId(reqMap.get("enqId"));
+        List<Ans> filteredAnsList = ansList.stream()
+                .filter(ans -> ans.getStatus() == AnsStatus.SUBMIT)
+                .collect(Collectors.toList());
+        num = Math.min(num, filteredAnsList.size());
+        Random random = new Random();
+        Set<Integer> selectedIndexes = new HashSet<>();
+
+        List<Ans> randomAnsList = new ArrayList<>();
+        while (randomAnsList.size() < num && selectedIndexes.size() < filteredAnsList.size()) {
+            int randomIndex = random.nextInt(filteredAnsList.size());
+            if (selectedIndexes.contains(randomIndex)) {
+                continue; // 이미 선택한 인덱스인 경우 건너뜁니다.
+            }
+            selectedIndexes.add(randomIndex);
+            Ans randomAns = filteredAnsList.get(randomIndex);
+            randomAnsList.add(randomAns);
+        }
+        List<String> rspList = new ArrayList<>();
+        for (Ans randomAns : randomAnsList) {
+            String memberName = memberServiceClient.getMemberNameByMemberId(randomAns.getMemberId());
+            rspList.add(memberName);
+        }
+
+        return rspList;
+    }
+
+    public List<Map<String, String>> pickOrder(Map<String, Long> reqMap) {
+        Long num = reqMap.get("num");
+        List<Ans> ansList = ansRepository.findByEnqId(reqMap.get("enqId"));
+        List<Ans> filteredAnsList = ansList.stream()
+                .filter(ans -> ans.getStatus() == AnsStatus.SUBMIT)
+                .collect(Collectors.toList());
+        num = Math.min(num, filteredAnsList.size());
+        List<Map<String, String>> rspList = new ArrayList<>();
+        for (int i = 0; i < num; i++) {
+            Map<String, String> tmpMap = new HashMap<>();
+            tmpMap.put("memberName",
+                    memberServiceClient.getMemberNameByMemberId(filteredAnsList.get(i).getMemberId()));
+            tmpMap.put("responseTime", String.valueOf(filteredAnsList.get(i).getResponseTime()));
+            rspList.add(tmpMap);
+        }
+        return rspList;
     }
 }

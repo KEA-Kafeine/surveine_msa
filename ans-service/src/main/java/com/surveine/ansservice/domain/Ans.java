@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -44,8 +45,11 @@ public class Ans {
     @Column(name = "update_date")
     private LocalDate updateDate;
 
+    @Column(name = "response_time")
+    private LocalDateTime responseTime;
+
     @Builder(toBuilder = true)
-    public Ans(Long id,String name, String cont, Long enqId, Long memberId, Long aboxId, AnsStatus status, Boolean isShow, LocalDate updateDate){
+    public Ans(Long id,String name, String cont, Long enqId, Long memberId, Long aboxId, AnsStatus status, Boolean isShow, LocalDate updateDate, LocalDateTime responseTime){
         this.id = id;
         this.name = name;
         this.cont = cont;
@@ -55,5 +59,6 @@ public class Ans {
         this.status = status;
         this.isShow = isShow;
         this.updateDate = updateDate;
+        this.responseTime = responseTime;
     }
 }

@@ -14,10 +14,10 @@ public class SboxController {
     /**
      * s1. 공유 템플릿 리스트 조회 Controller
      */
-    public ResponseEntity<Result> sboxPage(){
-        SboxPageDTO rspDTO = new SboxPageDTO(sboxService.getMemberCbox(), sboxService.getSharedEnq());
-
-
-    }
+//    public ResponseEntity<Result> sboxPage(){
+//        SboxPageDTO rspDTO = new SboxPageDTO(sboxService.getMemberCbox(), sboxService.getSharedEnq());
+//
+//
+//    }
 
 }

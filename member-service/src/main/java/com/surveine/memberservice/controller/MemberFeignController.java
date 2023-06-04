@@ -15,4 +15,10 @@ public class MemberFeignController {
         String rspString = memberService.getMemberName(memberId);
         return rspString;
     }
+
+    @GetMapping("/member-service/a6/{memberId}")
+    String getMemberNameByMemberId(@PathVariable Long memberId) {
+        String rspString = memberService.getMemberName(memberId);
+        return rspString;
+    }
 }

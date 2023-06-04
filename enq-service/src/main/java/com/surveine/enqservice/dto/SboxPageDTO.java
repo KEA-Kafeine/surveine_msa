@@ -9,6 +9,6 @@ import java.util.List;
  */
 @Getter
 public class SboxPageDTO {
-    private List<CboxSboxDTO> cbList;
-    private List<SboxEnqDTO> sandboxCBList;
+//    private List<CboxSboxDTO> cbList;
+//    private List<SboxEnqDTO> sandboxCBList;
 }

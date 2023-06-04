@@ -19,6 +19,7 @@ import java.util.List;
 public class EnqRspDTO {
     private Long id;
     private Long cboxId;
+    private String enqTitle;
     private String name;
     private List<EnqContDTO> cont;
     private Boolean isShared;
@@ -30,6 +31,7 @@ public class EnqRspDTO {
     public EnqRspDTO(Enq enq) throws JsonProcessingException {
         this.id = enq.getId();
         this.cboxId = enq.getCboxId();
+        this.enqTitle = enq.getTitle();
         this.name = enq.getName();
         this.cont = EnqService.getEnqCont(enq);
         this.isShared = enq.getIsShared();

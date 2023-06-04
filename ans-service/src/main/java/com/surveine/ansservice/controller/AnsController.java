@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -132,6 +133,44 @@ public class AnsController {
             Result result = Result.builder()
                     .isSuccess(false)
                     .message("응답지 이동 실패")
+                    .build();
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
+
+    @PostMapping("/pick/random")
+    public ResponseEntity<Result> pickRandom(@RequestBody Map<String, Long> reqMap) {
+        try {
+            List<String> pickResult = ansService.pickRandom(reqMap);
+            Result result = Result.builder()
+                    .isSuccess(true)
+                    .message("랜덤 추첨 성공")
+                    .result(pickResult)
+                    .build();
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            Result result = Result.builder()
+                    .isSuccess(false)
+                    .message("랜덤 추첨 실패")
+                    .build();
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
+
+    @PostMapping("/pick/order")
+    public ResponseEntity<Result> pickOrder(@RequestBody Map<String, Long> reqMap) {
+        try {
+            List<Map<String, String>> pickResult = ansService.pickOrder(reqMap);
+            Result result = Result.builder()
+                    .isSuccess(true)
+                    .message("선착순 추첨 성공")
+                    .result(pickResult)
+                    .build();
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            Result result = Result.builder()
+                    .isSuccess(false)
+                    .message("선착순 추첨 실패")
                     .build();
             return ResponseEntity.badRequest().body(result);
         }
