@@ -1,5 +1,6 @@
 package com.surveine.memberservice.controller;
 
+import com.surveine.memberservice.dto.MemberDTO;
 import com.surveine.memberservice.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,5 +21,11 @@ public class MemberFeignController {
     String getMemberNameByMemberId(@PathVariable Long memberId) {
         String rspString = memberService.getMemberName(memberId);
         return rspString;
+    }
+
+    @GetMapping("/member-service/member/{memberId}")
+    MemberDTO getMemberByMemberId(@PathVariable Long memberId) {
+        MemberDTO rspMember = memberService.getMemberDTOById(memberId);
+        return rspMember;
     }
 }

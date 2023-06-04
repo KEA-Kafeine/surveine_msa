@@ -1,22 +1,20 @@
-package com.surveine.ansservice.dto.anscont;
+package com.surveine.ansservice.dto.analysis;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
-public class AnsContDTO {
+@NoArgsConstructor
+public class AnsAnlContDTO {
     private String qstId;
-    private String qstType;
-    private String optionId;
+    private List<String> optionId;
     private String answerText;
-
     @Builder(toBuilder = true)
-    public AnsContDTO(String qstId, String qstType, String optionId, String answerText) {
+    public AnsAnlContDTO(String qstId, List<String> optionId, String answerText) {
         this.qstId = qstId;
-        this.qstType = qstType;
         this.optionId = optionId;
         this.answerText = answerText;
     }

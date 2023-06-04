@@ -1,7 +1,7 @@
-package com.surveine.ansservice.dto;
+package com.surveine.enqservice.dto;
 
-import com.surveine.ansservice.enums.DistType;
-import com.surveine.ansservice.enums.EnqStatus;
+import com.surveine.enqservice.enums.DistType;
+import com.surveine.enqservice.enums.EnqStatus;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.geo.GeoModule;

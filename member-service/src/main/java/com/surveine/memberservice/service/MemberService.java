@@ -1,6 +1,7 @@
 package com.surveine.memberservice.service;
 
 import com.surveine.memberservice.domain.Member;
+import com.surveine.memberservice.dto.MemberDTO;
 import com.surveine.memberservice.dto.MemberPageRspDTO;
 import com.surveine.memberservice.repository.MemberRepository;
 import com.surveine.memberservice.security.SecurityUtil;
@@ -43,5 +44,12 @@ public class MemberService {
     public String getMemberName(Long memberId) {
         String memberName = memberRepository.findById(memberId).get().getName();
         return memberName;
+    }
+
+    public MemberDTO getMemberDTOById(Long memberId) {
+        MemberDTO rspMember = MemberDTO.builder()
+                .member(memberRepository.findById(memberId).get())
+                .build();
+        return rspMember;
     }
 }

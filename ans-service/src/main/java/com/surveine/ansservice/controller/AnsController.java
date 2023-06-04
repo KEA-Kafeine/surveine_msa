@@ -98,21 +98,23 @@ public class AnsController {
         }
     }
 
-//    public ResponseEntity<Result> submitAns(@RequestHeader Long memberId, @PathVariable Long ansId) {
-//        try {
-//            Result result = Result.builder()
-//                    .isSuccess(true)
-//                    .message("응답지 제출 성공")
-//                    .build();
-//            return ResponseEntity.ok().body(result);
-//        } catch (Exception e) {
-//            Result result = Result.builder()
-//                    .isSuccess(false)
-//                    .message("응답지 제출 실패")
-//                    .build();
-//            return ResponseEntity.badRequest().body(result);
-//        }
-//    }
+    @PutMapping("/submit/{ansId}")
+    public ResponseEntity<Result> submitAns(@RequestHeader Long memberId, @PathVariable Long ansId) {
+        try {
+            ansService.submitAns(memberId, ansId);
+            Result result = Result.builder()
+                    .isSuccess(true)
+                    .message("응답지 제출 성공")
+                    .build();
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            Result result = Result.builder()
+                    .isSuccess(false)
+                    .message("응답지 제출 실패")
+                    .build();
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
 
     /**
      * a5. 개별 응답지 폴더이동

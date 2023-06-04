@@ -11,6 +11,7 @@ import com.surveine.enqservice.enums.EnqStatus;
 import com.surveine.enqservice.repository.EnqRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.*;
 import java.time.LocalDate;
@@ -352,5 +353,34 @@ public class EnqService {
     public DistType getDistTypeByEnqId(Long enqId) {
         DistType distType = enqRepository.findById(enqId).get().getDistType();
         return distType;
+    }
+
+    @Transactional
+    public void setResult(EnqDTO enq) {
+        Enq currentEnq = enqRepository.findById(enq.getId()).get();
+        Enq modifiedEnq = currentEnq.toBuilder()
+                .id(enq.getId())
+                .memberId(enq.getMemberId())
+                .cboxId(enq.getCboxId())
+                .name(enq.getName())
+                .title(enq.getTitle())
+                .cont(enq.getCont())
+                .isShared(enq.getIsShared())
+                .enqStatus(enq.getEnqStatus())
+                .distType(enq.getDistType())
+                .updateDate(enq.getUpdateDate())
+                .favCount(enq.getFavCount())
+                .enqAnalysis(enq.getEnqAnalysis())
+                .enqReport(enq.getEnqReport())
+                .geoBuffer(enq.getGeoBuffer())
+                .quota(enq.getQuota())
+                .startDateTime(enq.getStartDateTime())
+                .endDateTime(enq.getEndDateTime())
+                .ansedCnt(enq.getAnsedCnt())
+                .distLink(enq.getDistLink())
+                .myLocation(enq.getMyLocation())
+                .distRange(enq.getDistRange())
+                .build();
+        enqRepository.save(modifiedEnq);
     }
 }

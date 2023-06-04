@@ -1,14 +1,12 @@
 package com.surveine.enqservice.controller;
 
+import com.surveine.enqservice.dto.EnqDTO;
 import com.surveine.enqservice.dto.EnqWsDTO;
 import com.surveine.enqservice.enums.DistType;
 import com.surveine.enqservice.repository.EnqRepository;
 import com.surveine.enqservice.service.EnqService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,5 +37,10 @@ public class EnqFeignController {
     DistType getEnqDistTypeByEnqId(@PathVariable Long enqId) {
         DistType result = enqService.getDistTypeByEnqId(enqId);
         return result;
+    }
+
+    @PostMapping("/enq-service/ans-result")
+    void save(@RequestBody EnqDTO enq) {
+        enqService.setResult(enq);
     }
 }
