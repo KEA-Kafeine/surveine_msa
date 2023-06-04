@@ -162,19 +162,19 @@ public class WspaceController {
      * @param cboxName
      * @return
      */
-    @PostMapping("/cbox/rename/{cboxId}")
+    @PutMapping("/cbox/rename/{cboxId}")
     public ResponseEntity<Result> renameCbox(@PathVariable Long cboxId, @RequestBody Map<String, String> cboxName) {
         try {
             wspaceService.renameCbox(cboxId, cboxName);
             Result result = Result.builder()
                     .isSuccess(true)
-                    .message("--- 성공")
+                    .message("제작함 이름변경 성공")
                     .build();
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             Result result = Result.builder()
                     .isSuccess(false)
-                    .message("--- 실패")
+                    .message("제작함 이름변경 실패")
                     .build();
             return ResponseEntity.badRequest().body(result);
         }
@@ -186,51 +186,81 @@ public class WspaceController {
      * @param aboxName
      * @return
      */
-    @PostMapping("/abox/rename/{aboxId}")
+    @PutMapping("/abox/rename/{aboxId}")
     public ResponseEntity<Result> renameAbox(@PathVariable Long aboxId, @RequestBody Map<String, String> aboxName) {
         try {
             wspaceService.renameAbox(aboxId, aboxName);
             Result result = Result.builder()
                     .isSuccess(true)
-                    .message("--- 성공")
+                    .message("참여함 이름변경 성공")
                     .build();
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             Result result = Result.builder()
                     .isSuccess(false)
-                    .message("--- 실패")
+                    .message("참여함 이름변경 실패")
                     .build();
             return ResponseEntity.badRequest().body(result);
         }
     }
 
-    public ResponseEntity<Result> deleteCbox(@RequestHeader Long memberId) {
+    /**
+     * ws9. 제작함 폴더 삭제
+     * @param cboxId
+     * @return
+     */
+    @DeleteMapping("/cbox/delete/{cboxId}")
+    public ResponseEntity<Result> deleteCbox(@PathVariable Long cboxId) {
         try {
-            Result result = Result.builder()
-                    .isSuccess(true)
-                    .message("--- 성공")
-                    .build();
-            return ResponseEntity.ok().body(result);
+            Boolean rspBoolean = wspaceService.deleteCbox(cboxId);
+            if (rspBoolean) {
+                Result result = Result.builder()
+                        .isSuccess(true)
+                        .message("Cbox 삭제 성공")
+                        .build();
+                return ResponseEntity.ok().body(result);
+            } else {
+                Result result = Result.builder()
+                        .isSuccess(true)
+                        .message("Cbox 삭제 실패. 폴더에 설문이 존재합니다.")
+                        .build();
+                return ResponseEntity.ok().body(result);
+            }
         } catch (Exception e) {
             Result result = Result.builder()
                     .isSuccess(false)
-                    .message("--- 실패")
+                    .message("Cbox 삭제 실패")
                     .build();
             return ResponseEntity.badRequest().body(result);
         }
     }
 
-    public ResponseEntity<Result> deleteAbox(@RequestHeader Long memberId) {
+    /**
+     * ws10. 참여함 폴더 삭제
+     * @param aboxId
+     * @return
+     */
+    @DeleteMapping("/abox/delete/{aboxId}")
+    public ResponseEntity<Result> deleteAbox(@PathVariable Long aboxId) {
         try {
-            Result result = Result.builder()
-                    .isSuccess(true)
-                    .message("--- 성공")
-                    .build();
-            return ResponseEntity.ok().body(result);
+            Boolean rspBoolean = wspaceService.deleteAbox(aboxId);
+            if (rspBoolean) {
+                Result result = Result.builder()
+                        .isSuccess(true)
+                        .message("Abox 삭제 성공")
+                        .build();
+                return ResponseEntity.ok().body(result);
+            } else {
+                Result result = Result.builder()
+                        .isSuccess(true)
+                        .message("Abox 삭제 실패. 폴더에 응답이 존재합니다.")
+                        .build();
+                return ResponseEntity.ok().body(result);
+            }
         } catch (Exception e) {
             Result result = Result.builder()
                     .isSuccess(false)
-                    .message("--- 실패")
+                    .message("Abox 삭제 실패")
                     .build();
             return ResponseEntity.badRequest().body(result);
         }

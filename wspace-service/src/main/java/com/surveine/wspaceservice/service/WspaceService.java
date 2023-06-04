@@ -170,5 +170,27 @@ public class WspaceService {
         }
     }
 
+    public Boolean deleteCbox(Long cboxId) {
+        Cbox currentCbox = cboxRepository.findById(cboxId).get();
+        // cboxId에 해당하는 enq가 하나도 존재하지 않을 때에만 삭제.
+        if (enqServiceClient.getEnqCountByCboxId(cboxId) == 0L) {
+            cboxRepository.delete(currentCbox);
+            return true;
+        } else {
+            // cboxId에 해당하는 enq가 존재하므로, 삭제 거부
+            return false;
+        }
+    }
 
+    public Boolean deleteAbox(Long aboxId) {
+        Abox currentAbox = aboxRepository.findById(aboxId).get();
+        // aboxId에 해당하는 ans가 하나도 존재하지 않을 때에만 삭제.
+        if (ansServiceClient.getAnsCountByAboxId(aboxId) == 0L) {
+            aboxRepository.delete(currentAbox);
+            return true;
+        } else {
+            // aboxId에 해당하는 ans가 존재하므로, 삭제 거부
+            return false;
+        }
+    }
 }
