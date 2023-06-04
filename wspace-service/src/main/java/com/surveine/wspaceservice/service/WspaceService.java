@@ -202,4 +202,14 @@ public class WspaceService {
             return false;
         }
     }
+    
+    public List<SboxCboxDTO> getCboxListByMemberId(Long memberId) {
+        List<Cbox> cboxList = cboxRepository.findByMemberId(memberId);
+        List<SboxCboxDTO> rspList = cboxList.stream()
+                .map(cbox -> SboxCboxDTO.builder()
+                        .cbox(cbox)
+                        .build())
+                .collect(Collectors.toList());
+        return rspList;
+    }
 }
