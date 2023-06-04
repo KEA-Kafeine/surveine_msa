@@ -1,5 +1,7 @@
 package com.surveine.enqservice.controller;
 
+import com.surveine.enqservice.dto.EnqWsDTO;
+import com.surveine.enqservice.enums.DistType;
 import com.surveine.enqservice.repository.EnqRepository;
 import com.surveine.enqservice.service.EnqService;
 import lombok.RequiredArgsConstructor;
@@ -8,15 +10,34 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping
 public class EnqFeignController {
     private final EnqService enqService;
 
-    @GetMapping(value = "/enq-service/m1", consumes = "application/json")
+    @GetMapping("/enq-service/m1/{memberId}")
     Long getEnqCountByMemberId(@PathVariable Long memberId) {
         Long result = enqService.getEnqCountByMemberId(memberId);
+        return result;
+    }
+
+    @GetMapping("/enq-service/ws1/{cboxId}")
+    Long getEnqCountByCboxId(Long cboxId) {
+        Long result = enqService.getEnqCountByCboxId(cboxId);
+        return result;
+    }
+
+    @GetMapping("/enq-service/ws1/{cboxId}")
+    List<EnqWsDTO> getEnqWsDTOList(Long cboxId) {
+        List<EnqWsDTO> rspList = enqService.getEnqWsDTOList(cboxId);
+        return rspList;
+    }
+
+    @GetMapping("/enq-service/ws2/{enqId}")
+    DistType getEnqDistTypeByEnqId(@PathVariable Long enqId) {
+        DistType result = enqService.getDistTypeByEnqId(enqId);
         return result;
     }
 }

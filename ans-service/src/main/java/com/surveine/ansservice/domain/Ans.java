@@ -1,0 +1,59 @@
+package com.surveine.ansservice.domain;
+
+import com.surveine.ansservice.enums.AnsStatus;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "ans")
+public class Ans {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ans_id")
+    private Long id;
+
+    @Column(name = "ans_name")
+    private String name;
+
+    @Column(name = "ans_cont", columnDefinition = "TEXT")
+    private String cont;
+
+    @Column(name = "enq_id")
+    private Long enqId;
+
+    @Column(name = "member_id")
+    private Long memberId;
+
+    @Column(name = "abox_id")
+    private Long aboxId;
+
+    @Column(name = "ans_state")
+    @Enumerated(EnumType.STRING)
+    private AnsStatus status;
+
+    @Column(name = "ans_is_show")
+    private Boolean isShow;
+
+    @Column(name = "update_date")
+    private LocalDate updateDate;
+
+    @Builder(toBuilder = true)
+    public Ans(Long id,String name, String cont, Long enqId, Long memberId, Long aboxId, AnsStatus status, Boolean isShow, LocalDate updateDate){
+        this.id = id;
+        this.name = name;
+        this.cont = cont;
+        this.enqId = enqId;
+        this.memberId = memberId;
+        this.aboxId = aboxId;
+        this.status = status;
+        this.isShow = isShow;
+        this.updateDate = updateDate;
+    }
+}

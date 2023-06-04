@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.surveine.enqservice.domain.Enq;
 import com.surveine.enqservice.dto.enqcont.EnqContDTO;
 import com.surveine.enqservice.service.EnqService;
-import enums.DistType;
-import enums.EnqStatus;
+import com.surveine.enqservice.enums.DistType;
+import com.surveine.enqservice.enums.EnqStatus;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 public class EnqRspDTO {
     private Long id;
-    private Long cbox_id;
+    private Long cboxId;
     private String name;
     private List<EnqContDTO> cont;
     private Boolean isShared;
@@ -30,7 +30,7 @@ public class EnqRspDTO {
     @Builder
     public EnqRspDTO(Enq enq) throws JsonProcessingException {
         this.id = enq.getId();
-        this.cbox_id = enq.getCbox_id();
+        this.cboxId = enq.getCboxId();
         this.name = enq.getName();
         this.cont = EnqService.getEnqCont(enq);
         this.isShared = enq.getIsShared();

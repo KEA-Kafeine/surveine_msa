@@ -1,11 +1,7 @@
 package com.surveine.apigatewayservice.filter;
 
+
 import com.surveine.apigatewayservice.security.TokenProvider;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -22,7 +18,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
 
-    private final TokenProvider tokenProvider;
+    private TokenProvider tokenProvider;
 
     @Autowired
     public AuthorizationHeaderFilter(TokenProvider tokenProvider) {
@@ -30,8 +26,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         this.tokenProvider = tokenProvider;
     }
 
-    static class Config {
-
+    public static class Config {
     }
 
     @Override
@@ -54,10 +49,6 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             String subject = tokenProvider.getMemberId(token);
 
             if (subject.equals("feign")) return chain.filter(exchange);
-
-            if (false == tokenProvider.getRoles(token).contains("Customer")) {
-                return onError(exchange, "권한 없음", HttpStatus.UNAUTHORIZED);
-            }
 
             ServerHttpRequest newRequest = request.mutate()
                     .header("memberId", subject)

@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name = "enq-service")
 public interface EnqServiceClient {
-    @GetMapping("/enq-service/m2/{memberId}")
+    @GetMapping("/enq-service/m1/{memberId}")
     Long getEnqCountByMemberId(@PathVariable Long memberId);
 }

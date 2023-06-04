@@ -1,8 +1,9 @@
 package com.surveine.enqservice.domain;
 
-import enums.DistType;
-import enums.EnqStatus;
+import com.surveine.enqservice.enums.DistType;
+import com.surveine.enqservice.enums.EnqStatus;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -16,8 +17,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Inheritance
-@SuperBuilder(toBuilder = true)
 @Table(name = "enq")
 public class Enq {
     @Id
@@ -26,10 +25,10 @@ public class Enq {
     private Long id;
 
     @Column(name  = "member_id")
-    private Long member_id;
+    private Long memberId;
 
-    @JoinColumn(name = "cbox_id")
-    private Long cbox_id;
+    @Column(name = "cbox_id")
+    private Long cboxId;
 
     @Column(name = "enq_name")
     private String name;
@@ -93,4 +92,29 @@ public class Enq {
 
     @Column(name = "dist_range")
     private Integer distRange;
+
+    @Builder(toBuilder = true)
+    public Enq(Long id, Long memberId, Long cboxId, String name, String title, String cont, Boolean isShared, EnqStatus enqStatus, DistType distType, LocalDate updateDate, Long favCount, String enqAnalysis, Long enqReport, GeoModule geoBuffer, Integer quota, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer ansedCnt, String distLink, Point myLocation, Integer distRange) {
+        this.id = id;
+        this.memberId = memberId;
+        this.cboxId = cboxId;
+        this.name = name;
+        this.title = title;
+        this.cont = cont;
+        this.isShared = isShared;
+        this.enqStatus = enqStatus;
+        this.distType = distType;
+        this.updateDate = updateDate;
+        this.favCount = favCount;
+        this.enqAnalysis = enqAnalysis;
+        this.enqReport = enqReport;
+        this.geoBuffer = geoBuffer;
+        this.quota = quota;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.ansedCnt = ansedCnt;
+        this.distLink = distLink;
+        this.myLocation = myLocation;
+        this.distRange = distRange;
+    }
 }

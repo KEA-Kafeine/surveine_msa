@@ -6,6 +6,7 @@ import com.surveine.memberservice.repository.MemberRepository;
 import com.surveine.memberservice.security.SecurityUtil;
 import com.surveine.memberservice.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,8 @@ public class MemberService {
     private final EnqServiceClient enqServiceClient;
     private final AnsServiceClient ansServiceClient;
 
-    public Map<String, Object> getMemberProfile() {
-        Long memberId = SecurityUtil.getCurrentMemberId();
+    public Map<String, Object> getMemberProfile(Long memberId) {
+//        Long memberId = SecurityUtil.getCurrentMemberId();
         Map<String, Object> memberPageMap = new HashMap<>();
         Optional<Member> nowMember = memberRepository.findById(memberId);
 
@@ -35,8 +36,12 @@ public class MemberService {
         memberPageMap.put("member", rspDTO);
         memberPageMap.put("enqCount", enqServiceClient.getEnqCountByMemberId(memberId));
         memberPageMap.put("ansCount", ansServiceClient.getAnsCountByMemberId(memberId));
-//        memberPageMap.put("ansCount", ansRepository.countByMemberId(memberId));
 
         return memberPageMap;
+    }
+
+    public String getMemberName(Long memberId) {
+        String memberName = memberRepository.findById(memberId).get().getName();
+        return memberName;
     }
 }
