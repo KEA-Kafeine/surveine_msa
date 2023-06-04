@@ -25,7 +25,6 @@ public class EnqRspDTO {
     private EnqStatus enqStatus;
     private DistType distType;
     private LocalDate updateDate;
-    //TODO: Enq 컬럼이랑 같아야 되는지 확인
 
     @Builder
     public EnqRspDTO(Enq enq) throws JsonProcessingException {

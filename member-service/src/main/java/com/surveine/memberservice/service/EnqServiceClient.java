@@ -8,4 +8,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface EnqServiceClient {
     @GetMapping("/enq-service/m1/{memberId}")
     Long getEnqCountByMemberId(@PathVariable Long memberId);
+
 }
