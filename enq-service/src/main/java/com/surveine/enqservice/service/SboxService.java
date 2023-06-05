@@ -3,25 +3,31 @@ package com.surveine.enqservice.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.surveine.enqservice.domain.Enq;
 import com.surveine.enqservice.domain.Fav;
+import com.surveine.enqservice.domain.Report;
 import com.surveine.enqservice.dto.*;
+import com.surveine.enqservice.enums.DistType;
+import com.surveine.enqservice.enums.EnqStatus;
 import com.surveine.enqservice.repository.EnqRepository;
 import com.surveine.enqservice.repository.FavRepository;
-import com.surveine.enqservice.repository.SboxRepository;
+import com.surveine.enqservice.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class SboxService {
     private final EnqRepository enqRepository;
-    private final SboxRepository sboxRepository;
     private final FavRepository favRepository;
     private final WspaceServiceClient wspaceServiceClient;
+    private final ReportRepository reportRepository;
+    private final MemberServiceClient memberServiceClient;
 
     /**
      * s1. 공유 템플릿 리스트 조회 Service
@@ -87,7 +93,7 @@ public class SboxService {
      */
     public void chkFav(SboxFavDTO reqDTO, Long memberId){
         Long enqId = reqDTO.getEnqId();
-        Optional<Fav> fav = sboxRepository.findByEnqId(enqId);
+        Optional<Fav> fav = favRepository.findByEnqId(enqId);
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long curFav = enq.get().getFavCount();
         if(fav.isPresent()){
@@ -113,6 +119,54 @@ public class SboxService {
             }
         }
     }
+
+    /**
+     * s5. 템플릿 신고 Service
+     */
+    public void reportTmpl(Map<String, Long> reqMap, Long memberId){
+        Optional<Enq> enq = enqRepository.findById(reqMap.get("enqId"));
+        Optional<MemberDTO> memberDTO = memberServiceClient.getMemberDTOById(memberId);
+        //TODO: MemberDTO가 이미 member-service에 있는데, enq-service에서 정의하지 않은 enum의 GenderType이 있는 DTO이다.
+        // 1안: member-service에서 정의한 GenderType을 enq-service에서도 정의한다.
+        // 2안: Member 정보를 최소한으로 가져올 수 있는 (id, name, email) 새로운 DTO를 만든다. DTO 이름도 바꿔야 할 것.
+
+        if(memberDTO.isPresent() && enq.isPresent()){
+            Report report = Report.builder()
+                    .memberId(memberId)
+                    .enqId(enq.get().getId())
+                    .build();
+            reportRepository.save(report);
+
+        }
+        //TODO: MailService 를 독립적으로 둬야할까?
+//        Long updateEnqReport = Long.valueOf(reportRepository.findByEnqId(enq.get().getId()).size());
+//        if(updateEnqReport + 1L == 10) mailService.reportSendEmail(reqDto.getEnqId());
+//        Enq updateEnq = enq.get().toBuilder().enqReport(updateEnqReport+1L).build();
+//        enqRepository.save(updateEnq);
+
+    }
+
+    /**
+     * s6. 내 제작함으로 가져오기
+     */
+    public void getMyTmpl(Map<String, Long> reqMap, Long memberId) {
+        Optional<Enq> enq = enqRepository.findById(reqMap.get("enqId"));
+        SboxCboxDTO sboxCboxDTO = wspaceServiceClient.getSboxCboxDTOByMemberId(memberId);
+        if (sboxCboxDTO.getCboxId() > 0L && enq.isPresent()) {
+            Enq rspEnq = enq.get().toBuilder()
+                    .id(null)
+                    .memberId(memberId)
+                    .cboxId(sboxCboxDTO.getCboxId())
+                    .favCount(0L)
+                    .isShared(false)
+                    .distType(DistType.LINK)
+                    .updateDate(LocalDate.now())
+                    .enqStatus(EnqStatus.ENQ_MAKE)
+                    .build();
+            enqRepository.save(rspEnq);
+        }
+    }
+
 
 
     /**

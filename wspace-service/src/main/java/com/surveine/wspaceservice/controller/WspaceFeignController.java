@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,5 +26,11 @@ public class WspaceFeignController {
     List<SboxCboxDTO> getCboxListByMemberId(@PathVariable Long memberId) {
         List<SboxCboxDTO> rspList = wspaceService.getCboxListByMemberId(memberId);
         return rspList;
+    }
+
+    @GetMapping("/wspace-service/s6/{memberId}")
+    SboxCboxDTO getSboxCboxDTOByMemberId(@PathVariable Long memberId){
+        SboxCboxDTO rsp = wspaceService.getSboxCboxDTOByMemberId(memberId);
+        return rsp;
     }
 }

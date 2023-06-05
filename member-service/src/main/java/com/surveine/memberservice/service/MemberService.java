@@ -52,4 +52,6 @@ public class MemberService {
                 .build();
         return rspMember;
     }
+
+
 }

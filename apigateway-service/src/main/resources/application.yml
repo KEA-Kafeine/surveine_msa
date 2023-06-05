@@ -56,7 +56,7 @@ spring:
         - id: enq-service
           uri: lb://ENQ-SERVICE
           predicates:
-            - Path=/api/enq/**
+            - Path=/api/enq/**, /api/sbox/
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/(?<segment>.*), /$\{segment}

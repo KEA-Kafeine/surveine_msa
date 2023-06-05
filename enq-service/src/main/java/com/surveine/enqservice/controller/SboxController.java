@@ -9,7 +9,10 @@ import com.surveine.enqservice.dto.SboxTmplDTO;
 import com.surveine.enqservice.service.SboxService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.MessagingException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +22,7 @@ public class SboxController {
     /**
      * s1. 공유 템플릿 리스트 조회 Controller
      */
-    @GetMapping("")
+    @GetMapping("") //TODO: 원래는 '/' 없었음. 테스트 후 고칠지 말지 결정
     public ResponseEntity<Result> sboxPage(@RequestHeader Long memberId){
         try{
             SboxPageDTO rspDTO = sboxService.sboxPage(memberId);
@@ -98,6 +101,48 @@ public class SboxController {
             Result result = Result.builder()
                     .isSuccess(false)
                     .message("좋아요 상태 변경 실패")
+                    .build();
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
+
+    /**
+     * s5. 템플릿 신고 Controller
+     */
+    @PostMapping("/report")
+    public ResponseEntity<Result> reportTmpl(@RequestBody Map<String, Long> reqMap, @RequestHeader Long memberId) throws MessagingException{
+        try {
+            sboxService.reportTmpl(reqMap, memberId);
+            Result result = Result.builder()
+                    .isSuccess(true)
+                    .message("신고 완료")
+                    .build();
+            return ResponseEntity.ok().body(result);
+        }catch (Exception e){
+            Result result = Result.builder()
+                    .isSuccess(false)
+                    .message("신고 실패")
+                    .build();
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
+
+    /**
+     * s6. 내 제작함으로 가져오기 Controller
+     */
+    @PostMapping("/bring")
+    public ResponseEntity<Result> getMyTmpl(@RequestBody Map<String, Long> reqMap, @RequestHeader Long memberId){
+        try{
+            sboxService.getMyTmpl(reqMap, memberId);
+            Result result = Result.builder()
+                    .isSuccess(true)
+                    .message("내 제작함으로 가져오기 완료")
+                    .build();
+            return ResponseEntity.ok().body(result);
+        }catch (Exception e){
+            Result result = Result.builder()
+                    .isSuccess(false)
+                    .message("내 제작함으로 가져오기 실패")
                     .build();
             return ResponseEntity.badRequest().body(result);
         }

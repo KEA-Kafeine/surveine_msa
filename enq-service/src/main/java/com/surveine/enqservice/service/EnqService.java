@@ -252,12 +252,12 @@ public class EnqService {
         Optional<Enq> enq = enqRepository.findById(reqDTO.getEnqId());
         Long enqMemberId = enq.get().getMemberId();
         if(enq.isPresent() && enqMemberId == memberId){
-            EnqStatus enqStatus = enq.get().getEnqStatus();
-            // 배포 예약 -> 배포 시작일 경우: 배포 시작 날짜를 지금으로 바꿔야 함.
+            EnqStatus enqStatus = EnqStatus.valueOf(reqDTO.getEnqStatus());
+            // 바뀐 enq status가 배포 시작일 경우: 배포 시작 날짜를 지금으로 바꿔야 함.
             if(enqStatus == EnqStatus.DIST_DONE){
                 Enq rspEnq = enq.get().toBuilder()
                         .enqStatus(enqStatus)
-                        .endDateTime(LocalDateTime.now())
+                        .startDateTime(LocalDateTime.now())
                         .build();
                 enqRepository.save(rspEnq);
             }

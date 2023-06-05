@@ -212,4 +212,12 @@ public class WspaceService {
         return rspList;
     }
 
+    public SboxCboxDTO getSboxCboxDTOByMemberId(Long memberId){
+        Cbox cbox = cboxRepository.findCboxByMemberId(memberId);
+        SboxCboxDTO rsp = SboxCboxDTO.builder()
+                .cbox(cbox)
+                .build();
+        return rsp;
+    }
+
 }
