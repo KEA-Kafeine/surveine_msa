@@ -1,6 +1,7 @@
 package com.surveine.enqservice.repository;
 
 import com.surveine.enqservice.domain.Enq;
+import com.surveine.enqservice.enums.EnqStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,4 +19,10 @@ public interface EnqRepository extends JpaRepository<Enq, Long> {
     List<Enq> findByIsSharedTrue();
 
     Optional<Enq> findByDistLink(String distLink);
+
+    List<Enq> findTop10ByOrderByStartDateTimeAsc();
+    List<Enq> findTop10ByOrderByEndDateTimeAsc();
+
+    List<Enq> findTopByEnqStatusOrderByStartDateTimeAsc(EnqStatus enqStatus);
+    List<Enq> findTopByEnqStatusOrderByEndDateTimeAsc(EnqStatus enqStatus);
 }

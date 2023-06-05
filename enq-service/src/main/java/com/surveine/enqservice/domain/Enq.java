@@ -118,4 +118,8 @@ public class Enq {
         this.myLocation = myLocation;
         this.distRange = distRange;
     }
+
+    public void setEnqStatus(EnqStatus enqStatus) {
+        this.enqStatus = enqStatus;
+    }
 }

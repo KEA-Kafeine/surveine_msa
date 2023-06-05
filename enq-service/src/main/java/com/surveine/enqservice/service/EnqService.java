@@ -11,6 +11,7 @@ import com.surveine.enqservice.enums.DistType;
 import com.surveine.enqservice.enums.EnqStatus;
 import com.surveine.enqservice.repository.EnqRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -413,5 +414,48 @@ public class EnqService {
 
     public Optional<Enq> getEnqByDistLink(String distLink) {
         return enqRepository.findByDistLink(distLink);
+    }
+
+
+    /* 시간되면 자동 배포 */
+
+    @Scheduled(fixedRate = 10000) // 10초마다 실행
+    public void autoChangeEnqStatus() {
+        int batchSize = 1;
+//        List<Enq> changeDistdoneEnqList = enqRepository.findTop10ByEnqStatusOrderByStartDateTimeAsc(EnqStatus.DIST_WAIT);
+//        List<Enq> changeEnqdoneEnqList = enqRepository.findTopByEnqStatusOrderByEndDateTimeAsc(EnqStatus.DIST_DONE);
+        List<Enq> distwaitEnqList = enqRepository.findTopByEnqStatusOrderByStartDateTimeAsc(EnqStatus.DIST_WAIT);
+        List<Enq> distdoneEnqList = enqRepository.findTopByEnqStatusOrderByEndDateTimeAsc(EnqStatus.DIST_DONE);
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        if (distwaitEnqList.size() == batchSize) {
+            LocalDateTime tenthEnqStartDate = distwaitEnqList.get(batchSize - 1).getStartDateTime();
+
+            // 10번째의 startDate가 현재 시간보다 앞이면 enqState를 "DIST_WAIT"에서 "DIST_DONE"으로 변경
+            if (tenthEnqStartDate.isBefore(currentDateTime)) {
+                for (Enq enq : distwaitEnqList) {
+                    enq.setEnqStatus(EnqStatus.valueOf("DIST_DONE"));
+//                    enq.toBuilder()
+//                            .enqStatus(EnqStatus.valueOf("DIST_DONE"))
+//                            .build();
+                }
+                enqRepository.saveAll(distwaitEnqList);
+            }
+        }
+
+        if(distdoneEnqList.size() == batchSize){
+            LocalDateTime tenthEnqEndDate = distdoneEnqList.get(batchSize - 1).getEndDateTime();
+
+            // 10번째의 endDate가 현재 시간보다 앞이면 enqState를 "DIST_DONE"에서 "ENQ_DONE"으로 변경
+            if(tenthEnqEndDate.isBefore(currentDateTime)){
+                for(Enq enq : distdoneEnqList){
+                    enq.setEnqStatus(EnqStatus.valueOf("ENQ_DONE"));
+//                    enq.toBuilder()
+//                            .enqStatus(EnqStatus.valueOf("ENQ_DONE"))
+//                            .build();
+                }
+                enqRepository.saveAll(distdoneEnqList);
+            }
+        }
     }
 }
