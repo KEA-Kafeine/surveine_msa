@@ -10,7 +10,6 @@ spring:
     password: kafeine1!
   jpa:
     hibernate:
-      ddlAuto: create-drop
     generateDdl: true
     properties:
       hibernate:
