@@ -189,6 +189,20 @@ public class AnsService {
         return rspList;
     }
 
+    /**
+     * a9. 개별 응답지 조회 Service
+     */
+    public Map<String, Object> getAns(Long enqId, Long ansId){
+        Optional<Ans> ans = ansRepository.findById(ansId);
+        EnqDTO enq = enqServiceClient.getEnqByEnqId(enqId);
+        Map<String, Object> rspMap = new HashMap<>();
+        if(ans.isPresent()){
+            rspMap.put("ans", ans.get());
+            rspMap.put("enq", enq);
+        }
+        return rspMap;
+    }
+
     @Transactional
     public void submitAns(Long memberId, Long ansId) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();

@@ -149,7 +149,8 @@ public class WspaceService {
 
         Map<String, Object> rspMap = new HashMap<>();
 //        Point myLoc = new Point(lat.intValue(), lng.intValue());
-        List<EnqCBDTO> gpsEnqCBDTOList = new ArrayList<>();
+        List<Map<String, Object>> gpsEnqCBDTOList = new ArrayList<>();
+//        List<EnqCBDTO> gpsEnqCBDTOList = new ArrayList<>();
         try{
             gpsEnqCBDTOList = enqServiceClient.getGPSEnqCBDTOList(pointDTO.getLat(), pointDTO.getLng());
         }catch (Exception e){

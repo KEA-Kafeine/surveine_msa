@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 
 @FeignClient(name = "enq-service")
 public interface EnqServiceClient {
@@ -17,6 +18,6 @@ public interface EnqServiceClient {
     @GetMapping("/enq-service/ws1/list/{cboxId}")
     List<EnqCBDTO> getEnqCBDTOList(@PathVariable Long cboxId);
     @GetMapping("enq-service/ws3")
-    List<EnqCBDTO> getGPSEnqCBDTOList(@RequestParam("lat") Double lat,@RequestParam("lng") Double lng);
+    List<Map<String, Object>> getGPSEnqCBDTOList(@RequestParam("lat") Double lat, @RequestParam("lng") Double lng);
 
 }

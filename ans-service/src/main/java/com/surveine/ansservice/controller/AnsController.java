@@ -3,6 +3,7 @@ package com.surveine.ansservice.controller;
 import com.surveine.ansservice.config.Result;
 import com.surveine.ansservice.dto.AnsCreateDTO;
 import com.surveine.ansservice.dto.AnsUpdateDTO;
+import com.surveine.ansservice.dto.EnqDTO;
 import com.surveine.ansservice.service.AnsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -213,6 +214,28 @@ public class AnsController {
             Result result = Result.builder()
                     .isSuccess(false)
                     .message("선착순 추첨 실패")
+                    .build();
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
+
+    /**
+     * a9. 개별 응답지 조회
+     */
+    @GetMapping("/ans/{ansId}")
+    public ResponseEntity<Result> getAns(@PathVariable Long ansId, @RequestBody Long enqId, @RequestHeader Long memberId){
+        try{
+            Map<String, Object> rspMap = ansService.getAns(enqId, ansId);
+            Result result = Result.builder()
+                    .isSuccess(true)
+                    .message("응답지 조회 성공")
+                    .result(rspMap)
+                    .build();
+            return ResponseEntity.ok().body(result);
+        }catch (Exception e){
+            Result result = Result.builder()
+                    .isSuccess(false)
+                    .message("응답지 조회 실패")
                     .build();
             return ResponseEntity.badRequest().body(result);
         }
