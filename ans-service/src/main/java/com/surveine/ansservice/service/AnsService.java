@@ -103,6 +103,7 @@ public class AnsService {
         Ans modifiedAns = ans.toBuilder()
                 .name(reqDTO.getName())
                 .cont(objectMapper.writeValueAsString(reqDTO.getAnsCont()))
+                .updateDate(LocalDate.now())
                 .build();
 
         ansRepository.save(modifiedAns);
