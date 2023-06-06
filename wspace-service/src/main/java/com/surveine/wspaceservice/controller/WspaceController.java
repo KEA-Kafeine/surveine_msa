@@ -45,7 +45,10 @@ public class WspaceController {
     }
 
     /**
-     * c
+     * ws2. 참여함 설문지 조회
+     * @param aboxId
+     * @param memberId
+     * @return
      */
     @GetMapping("/abox/{aboxId}")
     public ResponseEntity<Result> wspaceAboxPage(@PathVariable Long aboxId, @RequestHeader Long memberId) {
@@ -91,28 +94,7 @@ public class WspaceController {
     }
 
     /**
-     * ws4. GPS 설문함 설문지 참여함 이동
-     * @param memberId
-     * @return
-     */
-    public ResponseEntity<Result> moveGpsEnqtoAbox(@RequestHeader Long memberId) {
-        try {
-            Result result = Result.builder()
-                    .isSuccess(true)
-                    .message("--- 성공")
-                    .build();
-            return ResponseEntity.ok().body(result);
-        } catch (Exception e) {
-            Result result = Result.builder()
-                    .isSuccess(false)
-                    .message("--- 실패")
-                    .build();
-            return ResponseEntity.badRequest().body(result);
-        }
-    }
-
-    /**
-     * ws5. 제작함 폴더 생성
+     * ws4. 제작함 폴더 생성
      * @param memberId
      * @param cboxName
      * @return
@@ -136,7 +118,7 @@ public class WspaceController {
     }
 
     /**
-     * ws6. 참여함 폴더 생성
+     * ws5. 참여함 폴더 생성
      * @param memberId
      * @return
      */
@@ -159,7 +141,7 @@ public class WspaceController {
     }
 
     /**
-     * ws7. 제작함 폴더 이름변경
+     * ws6. 제작함 폴더 이름변경
      * @param cboxId
      * @param cboxName
      * @return
@@ -183,7 +165,7 @@ public class WspaceController {
     }
 
     /**
-     * ws8. 참여함 폴더 이름변경
+     * ws7. 참여함 폴더 이름변경
      * @param aboxId
      * @param aboxName
      * @return
@@ -207,7 +189,7 @@ public class WspaceController {
     }
 
     /**
-     * ws9. 제작함 폴더 삭제
+     * ws8. 제작함 폴더 삭제
      * @param cboxId
      * @return
      */
@@ -238,7 +220,7 @@ public class WspaceController {
     }
 
     /**
-     * ws10. 참여함 폴더 삭제
+     * ws9. 참여함 폴더 삭제
      * @param aboxId
      * @return
      */

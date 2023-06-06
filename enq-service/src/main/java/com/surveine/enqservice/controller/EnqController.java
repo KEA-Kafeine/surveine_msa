@@ -332,7 +332,7 @@ public class EnqController {
     }
 
     /**
-     * e15.
+     * e15. 링크 조회
      * @param url
      * @return
      * @throws JsonProcessingException
