@@ -22,7 +22,7 @@ public class SboxController {
     /**
      * s1. 공유 템플릿 리스트 조회 Controller
      */
-    @GetMapping("") //TODO: 원래는 '/' 없었음. 테스트 후 고칠지 말지 결정
+    @GetMapping("")
     public ResponseEntity<Result> sboxPage(@RequestHeader Long memberId){
         try{
             SboxPageDTO rspDTO = sboxService.sboxPage(memberId);

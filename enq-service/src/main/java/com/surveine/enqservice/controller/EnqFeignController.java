@@ -8,6 +8,7 @@ import com.surveine.enqservice.service.EnqService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.util.List;
 
 @RestController
@@ -39,8 +40,16 @@ public class EnqFeignController {
         return result;
     }
 
+    @GetMapping("enq-service/ws3/{enqId}")
+    List<EnqWsDTO> getGPSEnqCBDTOList(Point myLoc) {
+        List<EnqWsDTO> result = enqService.getGPSEnqWsDTOList(myLoc);
+        return result;
+    }
+
     @PostMapping("/enq-service/ans-result")
     void save(@RequestBody EnqDTO enq) {
         enqService.setResult(enq);
     }
+
+
 }

@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,11 +57,19 @@ public class WspaceService {
 
         List<Cbox> cboxList = cboxRepository.findByMemberId(memberId);
         List<CboxSNDTO> cboxDTOList = cboxList.stream()
-                .map(cbox -> CboxSNDTO.builder()
-                        .cboxId(cbox.getId())
-                        .cboxName(cbox.getName())
-                        .enqCnt(enqServiceClient.getEnqCountByCboxId(cbox.getId()))
-                        .build())
+                .map(cbox -> {
+                    final CboxSNDTO cboxDTO = CboxSNDTO.builder()
+                            .cboxId(cbox.getId())
+                            .cboxName(cbox.getName())
+                            .enqCnt(enqServiceClient.getEnqCountByCboxId(cbox.getId()))
+                            .build();
+                    return cboxDTO;
+                })
+//                .map(cbox -> CboxSNDTO.builder()
+//                        .cboxId(cbox.getId())
+//                        .cboxName(cbox.getName())
+//                        .enqCnt(enqServiceClient.getEnqCountByCboxId(cbox.getId()))
+//                        .build())
                 .collect(Collectors.toList());
 
         rspMap.put("cboxList", cboxDTOList);
@@ -130,6 +140,15 @@ public class WspaceService {
         rspMap.put("abox", aboxCBListDTO);
 
         return rspMap;
+    }
+
+    /**
+     * ws3. GPS 설문함 설문지 조회
+     */
+    public List<EnqCBDTO> getWspaceGboxPage(String lat, String lng, Long memberId){
+        Point myLoc = new Point(Integer.parseInt(lat), Integer.parseInt(lng));
+        List<EnqCBDTO> gpsEnqCBDTOList = enqServiceClient.getGPSEnqCBDTOList(myLoc);
+        return gpsEnqCBDTOList;
     }
 
     @Transactional

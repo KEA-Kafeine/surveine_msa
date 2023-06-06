@@ -14,15 +14,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -236,7 +235,7 @@ public class EnqService {
                 int lng = (int) distInfo.get("lng");
                 int distRange = (int) distInfo.get("distRange");
                 rspEnq.toBuilder()
-                        .myLocation(new Point(lat, lng))
+                        .enqLoc(new Point(lat, lng))
                         .distRange(distRange)
                         .build();
             }
@@ -288,7 +287,7 @@ public class EnqService {
                     .startDateTime(null)
                     .endDateTime(null)
                     .distLink(null)
-                    .myLocation(null)
+                    .enqLoc(null)
                     .distRange(0)
                     .build();
             enqRepository.save(rspEnq);
@@ -350,6 +349,46 @@ public class EnqService {
         return enqWsDTOList;
     }
 
+    public List<EnqWsDTO> getGPSEnqWsDTOList(Point myLoc){
+        List<Enq> enqList = enqRepository.findEnqByDistTypeAndEnqStatus(DistType.GPS, EnqStatus.DIST_DONE);
+        List<Enq> availableEnqList = new ArrayList<>();
+
+        for (Enq enq : enqList) {
+            double distance = calculateDistance(myLoc, enq.getEnqLoc());
+            if (distance <= Double.parseDouble(String.valueOf(enq.getDistRange()))) {
+                availableEnqList.add(enq);
+            }
+        }
+
+        List<EnqWsDTO> rspList = availableEnqList.stream()
+                .map(enq -> EnqWsDTO.builder()
+                        .enq(enq)
+                        .build())
+                .collect(Collectors.toList());
+        return rspList;
+    }
+
+    private double calculateDistance(Point loc1, Point loc2) {
+        final int R = 6371; // 지구 반지름 (km)
+        double lat1 = Math.toRadians(loc1.getX());
+        double lon1 = Math.toRadians(loc1.getY());
+        double lat2 = Math.toRadians(loc2.getX());
+        double lon2 = Math.toRadians(loc2.getY());
+
+        double dlon = lon2 - lon1;
+        double dlat = lat2 - lat1;
+
+        double a = Math.sin(dlat / 2) * Math.sin(dlat / 2) +
+                Math.cos(lat1) * Math.cos(lat2) *
+                        Math.sin(dlon / 2) * Math.sin(dlon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        double distance = R * c * 1000; // km 단위를 m 단위로 변환
+
+        return distance;
+    }
+
+
     public DistType getDistTypeByEnqId(Long enqId) {
         DistType distType = enqRepository.findById(enqId).get().getDistType();
         return distType;
@@ -378,7 +417,7 @@ public class EnqService {
                 .endDateTime(enq.getEndDateTime())
                 .ansedCnt(enq.getAnsedCnt())
                 .distLink(enq.getDistLink())
-                .myLocation(enq.getMyLocation())
+                .enqLoc(enq.getEnqLoc())
                 .distRange(enq.getDistRange())
                 .build();
         enqRepository.save(modifiedEnq);
@@ -422,8 +461,9 @@ public class EnqService {
     @Scheduled(fixedRate = 10000) // 10초마다 실행
     public void autoChangeEnqStatus() {
         int batchSize = 1;
-//        List<Enq> changeDistdoneEnqList = enqRepository.findTop10ByEnqStatusOrderByStartDateTimeAsc(EnqStatus.DIST_WAIT);
-//        List<Enq> changeEnqdoneEnqList = enqRepository.findTopByEnqStatusOrderByEndDateTimeAsc(EnqStatus.DIST_DONE);
+        /*설문 개수가 적어서 우선 1개로 해놈 10개로 바꾸고 싶으면, bachSize를 10으로 바꾸로 아래 두 줄을 그 아래 두 줄과 주석을 바꾼다*/
+//        List<Enq> distwaitEnqList = enqRepository.findTop10ByEnqStatusOrderByStartDateTimeAsc(EnqStatus.DIST_WAIT);
+//        List<Enq> distdoneEnqList = enqRepository.findTopByEnqStatusOrderByEndDateTimeAsc(EnqStatus.DIST_DONE);
         List<Enq> distwaitEnqList = enqRepository.findTopByEnqStatusOrderByStartDateTimeAsc(EnqStatus.DIST_WAIT);
         List<Enq> distdoneEnqList = enqRepository.findTopByEnqStatusOrderByEndDateTimeAsc(EnqStatus.DIST_DONE);
         LocalDateTime currentDateTime = LocalDateTime.now();

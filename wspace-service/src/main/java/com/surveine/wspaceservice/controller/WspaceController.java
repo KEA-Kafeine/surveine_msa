@@ -2,6 +2,7 @@ package com.surveine.wspaceservice.controller;
 
 import com.surveine.wspaceservice.config.Result;
 import com.surveine.wspaceservice.domain.Cbox;
+import com.surveine.wspaceservice.dto.EnqCBDTO;
 import com.surveine.wspaceservice.exception.AuthException;
 import com.surveine.wspaceservice.service.WspaceService;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -43,10 +45,7 @@ public class WspaceController {
     }
 
     /**
-     * ws2. 참여함 설문지 조회
-     * @param aboxId
-     * @param memberId
-     * @return
+     * c
      */
     @GetMapping("/abox/{aboxId}")
     public ResponseEntity<Result> wspaceAboxPage(@PathVariable Long aboxId, @RequestHeader Long memberId) {
@@ -72,17 +71,20 @@ public class WspaceController {
      * @param memberId
      * @return
      */
-    public ResponseEntity<Result> wspaceGboxPage(@RequestHeader Long memberId) {
+    @PostMapping("/gbox")
+    public ResponseEntity<Result> wspaceGboxPage(@RequestParam("lat") String lat, @RequestParam("lng") String lng, @RequestHeader Long memberId) {
         try {
+            List<EnqCBDTO> rspMap = wspaceService.getWspaceGboxPage(lat, lng, memberId);
             Result result = Result.builder()
                     .isSuccess(true)
-                    .message("--- 성공")
+                    .message("GPS 설문함 설문지 조회 성공")
+                    .result(rspMap)
                     .build();
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             Result result = Result.builder()
                     .isSuccess(false)
-                    .message("--- 실패")
+                    .message("GPS 설문함 설문지 조회 실패")
                     .build();
             return ResponseEntity.badRequest().body(result);
         }
