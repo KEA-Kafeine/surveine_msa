@@ -6,12 +6,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.springframework.data.geo.GeoModule;
 
 import javax.persistence.*;
 import java.awt.*;
-import java.nio.Buffer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -95,7 +93,7 @@ public class Enq {
     private Integer distRange;
 
     @Builder(toBuilder = true)
-    public Enq(Long id, Long memberId, Long cboxId, String name, String title, String cont, String nodes, Boolean isShared, EnqStatus enqStatus, DistType distType, LocalDate updateDate, Long favCount, String enqAnalysis, Long enqReport, GeoModule geoBuffer, Integer quota, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer ansedCnt, String distLink, Point enqLoc, Integer distRange) {
+    public Enq(Long id, Long memberId, Long cboxId, String name, String title, String cont, String nodes, Boolean isShared, EnqStatus enqStatus, DistType distType, LocalDate updateDate, Long favCount, String enqAnalysis, Long enqReport, Integer quota, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer ansedCnt, String distLink, Point enqLoc, Integer distRange) {
         this.id = id;
         this.memberId = memberId;
         this.cboxId = cboxId;

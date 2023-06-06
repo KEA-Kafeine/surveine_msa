@@ -234,14 +234,14 @@ public class EnqService {
                     .build();
             if(distType.equals(DistType.LINK.toString())){
                 String distLink = (String) distInfo.get("distLink");
-                rspEnq.toBuilder()
+                rspEnq = rspEnq.toBuilder()
                         .distLink(distLink)
                         .build();
             }else{
                 int lat = (int) distInfo.get("lat");
                 int lng = (int) distInfo.get("lng");
                 int distRange = (int) distInfo.get("distRange");
-                rspEnq.toBuilder()
+                rspEnq = rspEnq.toBuilder()
                         .enqLoc(new Point(lat, lng))
                         .distRange(distRange)
                         .build();
@@ -418,7 +418,6 @@ public class EnqService {
                 .favCount(enq.getFavCount())
                 .enqAnalysis(enq.getEnqAnalysis())
                 .enqReport(enq.getEnqReport())
-                .geoBuffer(enq.getGeoBuffer())
                 .quota(enq.getQuota())
                 .startDateTime(enq.getStartDateTime())
                 .endDateTime(enq.getEndDateTime())
