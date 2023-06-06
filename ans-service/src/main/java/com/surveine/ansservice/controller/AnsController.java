@@ -18,7 +18,7 @@ public class AnsController {
     private final AnsService ansService;
 
     /**
-     * a1. 개별 응답지 저장
+     * a1. 개별 응답지 첫 저장
      * @param memberId
      * @param reqDTO
      * @return
