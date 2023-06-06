@@ -145,9 +145,14 @@ public class WspaceService {
     /**
      * ws3. GPS 설문함 설문지 조회
      */
-    public List<EnqCBDTO> getWspaceGboxPage(String lat, String lng, Long memberId){
-        Point myLoc = new Point(Integer.parseInt(lat), Integer.parseInt(lng));
-        List<EnqCBDTO> gpsEnqCBDTOList = enqServiceClient.getGPSEnqCBDTOList(myLoc);
+    public List<EnqCBDTO> getWspaceGboxPage(Double lat, Double lng, Long memberId){
+        Point myLoc = new Point(lat.intValue(), lng.intValue());
+        List<EnqCBDTO> gpsEnqCBDTOList = new ArrayList<>();
+        try{
+            gpsEnqCBDTOList = enqServiceClient.getGPSEnqCBDTOList(myLoc);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return gpsEnqCBDTOList;
     }
 
