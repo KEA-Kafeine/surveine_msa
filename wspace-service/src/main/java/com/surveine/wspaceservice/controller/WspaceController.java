@@ -71,7 +71,7 @@ public class WspaceController {
      * @param memberId
      * @return
      */
-    @GetMapping("/gbox")
+    @PostMapping("/gbox")
     public ResponseEntity<Result> wspaceGboxPage(@RequestBody Map<String, Double> latlng, @RequestHeader Long memberId) {
         try {
             List<EnqCBDTO> rspMap = wspaceService.getWspaceGboxPage(latlng.get("lat"), latlng.get("lng"), memberId);
