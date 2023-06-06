@@ -15,14 +15,16 @@ public class EnqCreateDTO {
     private String enqName;
     private String enqTitle;
     private List<EnqContDTO> enqCont;
+    private Object nodes;
     private String enqNanoId;
 
 
     @Builder
-    public EnqCreateDTO(Long cboxId, String enqTitle, String enqName, List<EnqContDTO> cont, String enqNanoId) {
+    public EnqCreateDTO(Long cboxId, String enqTitle, String enqName, List<EnqContDTO> cont, Object nodes, String enqNanoId) {
         this.cboxId = cboxId;
         this.enqTitle = enqTitle;
         this.enqName = enqName;
+        this.nodes = nodes;
         this.enqCont = cont;
         this.enqNanoId = enqNanoId;
     }

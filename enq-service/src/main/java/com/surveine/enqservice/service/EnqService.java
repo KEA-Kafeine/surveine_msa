@@ -37,11 +37,13 @@ public class EnqService {
      * @throws JsonProcessingException
      */
     public EnqRspDTO getEnq(Long enqId, Long memberId) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
         Optional<Enq> enq =  enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
         if(enq.isPresent() && memberId == enqMemberId){
             return EnqRspDTO.builder()
                     .enq(enq.get())
+                    .nodes(mapper.readValue(enq.get().getNodes(), new TypeReference<>() {}))
                     .build();
         }else{
             return null;
@@ -53,6 +55,7 @@ public class EnqService {
      * e2. 설문지 생성 Service
      */
     public Long createEnq(EnqCreateDTO reqDTO, Long memberId) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
         if(reqDTO != null){
             Enq enq = Enq.builder()
                     .memberId(memberId)
@@ -60,6 +63,7 @@ public class EnqService {
                     .name(reqDTO.getEnqName())
                     .title(reqDTO.getEnqTitle())
                     .cont(enqContToJSON(reqDTO.getEnqCont()))
+                    .nodes(mapper.writeValueAsString(reqDTO.getNodes()))
                     .isShared(false)
                     .favCount(0L)
                     .enqStatus(EnqStatus.ENQ_MAKE)
@@ -76,14 +80,17 @@ public class EnqService {
      * e3. 설문지 수정 Service
      */
     public void updateEnq(Long enqId, EnqUpdateDTO reqDTO, Long memberId) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
         if(enqRepository.findById(enqId).isPresent() && reqDTO != null) {
             reqDTO.toBuilder().enqId(enqId).build();
             Optional<Enq> enq = enqRepository.findById(reqDTO.getEnqId());
             if(memberId == enq.get().getMemberId()){
                 Enq rspEnq = enq.get()
                         .toBuilder()
+                        .title(reqDTO.getEnqTitle())
                         .name(reqDTO.getEnqName())
                         .cont(enqContToJSON(reqDTO.getEnqCont()))
+                        .nodes(mapper.writeValueAsString(reqDTO.getNodes()))
                         .build();
                 enqRepository.save(rspEnq);
             } else {
