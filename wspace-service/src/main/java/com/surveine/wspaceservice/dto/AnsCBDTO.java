@@ -3,9 +3,11 @@ package com.surveine.wspaceservice.dto;
 import com.surveine.wspaceservice.enums.AnsStatus;
 import com.surveine.wspaceservice.enums.DistType;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
+@Getter
 public class AnsCBDTO {
     private Long ansId;
 
