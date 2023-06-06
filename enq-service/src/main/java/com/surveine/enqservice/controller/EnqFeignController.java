@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,8 +42,8 @@ public class EnqFeignController {
     }
 
     @GetMapping("enq-service/ws3")
-    List<EnqWsDTO> getGPSEnqCBDTOList(@RequestParam("lat") Double lat,@RequestParam("lng") Double lng) {
-        List<EnqWsDTO> result = enqService.getGPSEnqWsDTOList(lat, lng);
+    List<Map<String, Object>> getGPSEnqCBDTOList(@RequestParam("lat") Double lat, @RequestParam("lng") Double lng) {
+        List<Map<String, Object>> result = enqService.getGPSEnqWsDTOList(lat, lng);
         return result;
     }
     @PostMapping("/enq-service/ans-result")

@@ -22,6 +22,7 @@ public class EnqWsDTO {
 
     private LocalDate updateDate;
 
+
     @Builder
     public EnqWsDTO(Enq enq) {
         this.enqId = enq.getId();

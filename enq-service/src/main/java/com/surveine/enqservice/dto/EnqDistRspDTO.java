@@ -17,7 +17,7 @@ public class EnqDistRspDTO {
     private Integer quota;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private Integer distRange;
+    private String distRange;
     private String distLink;
 
     @Builder
@@ -27,7 +27,7 @@ public class EnqDistRspDTO {
         this.quota = enq.getQuota();
         this.startDateTime = enq.getStartDateTime();
         this.endDateTime = enq.getEndDateTime();
-        this.distRange = enq.getDistRange();
+        this.distRange = String.valueOf(enq.getDistRange());
         this.distLink = enq.getDistLink();
     }
 }

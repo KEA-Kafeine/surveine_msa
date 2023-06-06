@@ -377,25 +377,22 @@ public class EnqService {
         return enqWsDTOList;
     }
 
-    public List<EnqWsDTO> getGPSEnqWsDTOList(Double lat, Double lng){
-//        Point myLoc = new Point(Integer.parseInt(lat), Integer.parseInt(lng));
-        Point myLoc = new Point(lat.intValue(), lng.intValue());
+    public List<Map<String, Object>> getGPSEnqWsDTOList(Double lat, Double lng){
         List<Enq> enqList = enqRepository.findEnqByDistTypeAndEnqStatus(DistType.GPS, EnqStatus.DIST_DONE);
-        List<Enq> availableEnqList = new ArrayList<>();
+        List<Map<String, Object>> availableEnqList = new ArrayList<>();
+//        Map<String, Object> availableEnq = new HashMap<>();
+        double distance = 0;
 
         for (Enq enq : enqList) {
-            double distance = calculateDistance(lat, lng, enq.getEnqLat(), enq.getEnqLng());
+            Map<String, Object> availableEnq = new HashMap<>();
+            distance = calculateDistance(lat, lng, enq.getEnqLat(), enq.getEnqLng());
             if (distance <= Double.parseDouble(String.valueOf(enq.getDistRange()))) {
-                availableEnqList.add(enq);
+                availableEnq.put("enq", enq);
+                availableEnq.put("distance", String.format("%.1f", distance) + "m");
+                availableEnqList.add(availableEnq);
             }
         }
-
-        List<EnqWsDTO> rspList = availableEnqList.stream()
-                .map(enq -> EnqWsDTO.builder()
-                        .enq(enq)
-                        .build())
-                .collect(Collectors.toList());
-        return rspList;
+        return availableEnqList;
     }
 
     private double calculateDistance(Double lat1, Double lng1, Double lat2, Double lng2) {
