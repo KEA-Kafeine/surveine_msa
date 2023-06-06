@@ -39,15 +39,21 @@ public class EnqFeignController {
         DistType result = enqService.getDistTypeByEnqId(enqId);
         return result;
     }
+
     @GetMapping("enq-service/ws3")
-    List<EnqWsDTO> getGPSEnqCBDTOList(@RequestParam("lat") Double lat,@RequestParam("lng") Double lng) {
-        List<EnqWsDTO> result = enqService.getGPSEnqWsDTOList(lat, lng);
+    List<EnqWsDTO> getGPSEnqCBDTOList(Point myLoc) {
+        List<EnqWsDTO> result = enqService.getGPSEnqWsDTOList(myLoc);
         return result;
     }
+
     @PostMapping("/enq-service/ans-result")
     void save(@RequestBody EnqDTO enq) {
         enqService.setResult(enq);
     }
 
-
+    @GetMapping("/enq-service/enq/{enqId}")
+    EnqDTO getEnqByEnqId(@PathVariable Long enqId) {
+        EnqDTO rspDTO = enqService.getEnqByEnqId(enqId);
+        return rspDTO;
+    }
 }

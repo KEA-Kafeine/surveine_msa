@@ -1,6 +1,7 @@
 package com.surveine.enqservice.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.surveine.enqservice.config.Result;
 import com.surveine.enqservice.domain.Enq;
 import com.surveine.enqservice.dto.*;
@@ -46,6 +47,7 @@ public class EnqController {
      */
     @PutMapping("/create")
     public ResponseEntity<Result> createEnq(@RequestBody EnqCreateDTO reqDTO, @RequestHeader Long memberId) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
         Long enqId = enqService.createEnq(reqDTO, memberId);
         if(enqId > 0L){
             EnqCreateRspDTO createRspDTO = EnqCreateRspDTO.builder()
@@ -53,6 +55,7 @@ public class EnqController {
                     .enqTitle(reqDTO.getEnqTitle())
                     .cboxId(reqDTO.getCboxId())
                     .cont(reqDTO.getEnqCont())
+                    .nodes(mapper.writeValueAsString(reqDTO.getNodes()))
                     .enqId(enqId)
                     .build();
 
@@ -190,7 +193,7 @@ public class EnqController {
                     .message("설문지 공유상태 변경 성공")
                     .build();
             return ResponseEntity.ok(result);
-        }catch (Exception e){
+        }catch (Exception e) {
             Result result = Result.builder()
                     .isSuccess(false)
                     .message("설문지 공유상태 변경 실패")
@@ -329,7 +332,7 @@ public class EnqController {
     }
 
     /**
-     * e15. (Link) 빈 응답지 조회
+     * e15.
      * @param url
      * @return
      * @throws JsonProcessingException

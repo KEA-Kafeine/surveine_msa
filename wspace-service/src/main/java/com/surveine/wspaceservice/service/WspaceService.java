@@ -145,19 +145,15 @@ public class WspaceService {
     /**
      * ws3. GPS 설문함 설문지 조회
      */
-    public Map<String, Object> getWspaceGboxPage(PointDTO pointDTO, Long memberId){
-
-        Map<String, Object> rspMap = new HashMap<>();
-//        Point myLoc = new Point(lat.intValue(), lng.intValue());
+    public List<EnqCBDTO> getWspaceGboxPage(Double lat, Double lng, Long memberId){
+        Point myLoc = new Point(lat.intValue(), lng.intValue());
         List<EnqCBDTO> gpsEnqCBDTOList = new ArrayList<>();
         try{
-            gpsEnqCBDTOList = enqServiceClient.getGPSEnqCBDTOList(pointDTO.getLat(), pointDTO.getLng());
+            gpsEnqCBDTOList = enqServiceClient.getGPSEnqCBDTOList(myLoc);
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        rspMap.put("GPSBox", gpsEnqCBDTOList);
-        return rspMap;
+        return gpsEnqCBDTOList;
     }
 
     @Transactional

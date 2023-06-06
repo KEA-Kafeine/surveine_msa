@@ -4,7 +4,6 @@ import com.surveine.wspaceservice.dto.EnqCBDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.awt.*;
 import java.util.List;
@@ -18,5 +17,5 @@ public interface EnqServiceClient {
     List<EnqCBDTO> getEnqCBDTOList(@PathVariable Long cboxId);
 
     @GetMapping("enq-service/ws3")
-    List<EnqCBDTO> getGPSEnqCBDTOList(@RequestParam("lat") Double lat,@RequestParam("lng") Double lng);
+    List<EnqCBDTO> getGPSEnqCBDTOList(Point myLoc);
 }

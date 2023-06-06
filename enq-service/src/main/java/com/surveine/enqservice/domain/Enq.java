@@ -86,17 +86,14 @@ public class Enq {
     private String distLink;
 
     //gps
-    @Column(name = "enq_lat")
-    private Double enqLat;
-
-    @Column(name = "enq_lng")
-    private Double enqLng;
+    @Column(name = "enq_loc")
+    private Point enqLoc;
 
     @Column(name = "dist_range")
     private Integer distRange;
 
     @Builder(toBuilder = true)
-    public Enq(Long id, Long memberId, Long cboxId, String name, String title, String cont, String nodes, Boolean isShared, EnqStatus enqStatus, DistType distType, LocalDate updateDate, Long favCount, String enqAnalysis, Long enqReport, Integer quota, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer ansedCnt, String distLink,Double enqLat, Double enqLng, Integer distRange) {
+    public Enq(Long id, Long memberId, Long cboxId, String name, String title, String cont, String nodes, Boolean isShared, EnqStatus enqStatus, DistType distType, LocalDate updateDate, Long favCount, String enqAnalysis, Long enqReport, Integer quota, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer ansedCnt, String distLink, Point enqLoc, Integer distRange) {
         this.id = id;
         this.memberId = memberId;
         this.cboxId = cboxId;
@@ -117,8 +114,7 @@ public class Enq {
         this.endDateTime = endDateTime;
         this.ansedCnt = ansedCnt;
         this.distLink = distLink;
-        this.enqLat = enqLat;
-        this.enqLng = enqLng;
+        this.enqLoc = enqLoc;
         this.distRange = distRange;
     }
 

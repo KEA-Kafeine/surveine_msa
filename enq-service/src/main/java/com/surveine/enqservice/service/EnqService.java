@@ -261,8 +261,7 @@ public class EnqService {
 
                 rspEnq = rspEnq.toBuilder()
                         .distType(DistType.GPS)
-                        .enqLat(lat)
-                        .enqLng(lng)
+                        .enqLoc(enqLoc)
                         .distRange(distRange)
                         .build();
             }
@@ -314,8 +313,7 @@ public class EnqService {
                     .startDateTime(null)
                     .endDateTime(null)
                     .distLink(null)
-                    .enqLat(null)
-                    .enqLng(null)
+                    .enqLoc(null)
                     .distRange(0)
                     .build();
             enqRepository.save(rspEnq);
@@ -376,14 +374,13 @@ public class EnqService {
                 .collect(Collectors.toList());
         return enqWsDTOList;
     }
-    public List<EnqWsDTO> getGPSEnqWsDTOList(Double lat, Double lng){
-//        Point myLoc = new Point(Integer.parseInt(lat), Integer.parseInt(lng));
-        Point myLoc = new Point(lat.intValue(), lng.intValue());
+
+    public List<EnqWsDTO> getGPSEnqWsDTOList(Point myLoc){
         List<Enq> enqList = enqRepository.findEnqByDistTypeAndEnqStatus(DistType.GPS, EnqStatus.DIST_DONE);
         List<Enq> availableEnqList = new ArrayList<>();
 
         for (Enq enq : enqList) {
-            double distance = calculateDistance(lat, lng, enq.getEnqLat(), enq.getEnqLng());
+            double distance = calculateDistance(myLoc, enq.getEnqLoc());
             if (distance <= Double.parseDouble(String.valueOf(enq.getDistRange()))) {
                 availableEnqList.add(enq);
             }
@@ -397,17 +394,20 @@ public class EnqService {
         return rspList;
     }
 
-    private double calculateDistance(Double lat1, Double lng1, Double lat2, Double lng2) {
+    private double calculateDistance(Point loc1, Point loc2) {
         final int R = 6371; // 지구 반지름 (km)
+        double lat1 = Math.toRadians(loc1.getX());
+        double lon1 = Math.toRadians(loc1.getY());
+        double lat2 = Math.toRadians(loc2.getX());
+        double lon2 = Math.toRadians(loc2.getY());
 
-        double dlon = lng2 - lng1;
+        double dlon = lon2 - lon1;
         double dlat = lat2 - lat1;
 
         double a = Math.sin(dlat / 2) * Math.sin(dlat / 2) +
                 Math.cos(lat1) * Math.cos(lat2) *
                         Math.sin(dlon / 2) * Math.sin(dlon / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-//        long c2 = ((long) 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
 
         double distance = R * c * 1000; // km 단위를 m 단위로 변환
 
@@ -442,8 +442,7 @@ public class EnqService {
                 .endDateTime(enq.getEndDateTime())
                 .ansedCnt(enq.getAnsedCnt())
                 .distLink(enq.getDistLink())
-                .enqLat(enq.getLat())
-                .enqLng(enq.getLng())
+                .enqLoc(enq.getEnqLoc())
                 .distRange(enq.getDistRange())
                 .build();
         enqRepository.save(modifiedEnq);
@@ -523,5 +522,32 @@ public class EnqService {
                 enqRepository.saveAll(distdoneEnqList);
             }
         }
+    }
+
+    public EnqDTO getEnqByEnqId(Long enqId) {
+        Enq enq = enqRepository.findById(enqId).get();
+        EnqDTO rspDTO = EnqDTO.builder()
+                .id(enq.getId())
+                .memberId(enq.getMemberId())
+                .cboxId(enq.getCboxId())
+                .name(enq.getName())
+                .title(enq.getTitle())
+                .cont(enq.getCont())
+                .isShared(enq.getIsShared())
+                .enqStatus(enq.getEnqStatus())
+                .distType(enq.getDistType())
+                .updateDate(enq.getUpdateDate())
+                .favCount(enq.getFavCount())
+                .enqAnalysis(enq.getEnqAnalysis())
+                .enqReport(enq.getEnqReport())
+                .quota(enq.getQuota())
+                .startDateTime(enq.getStartDateTime())
+                .endDateTime(enq.getEndDateTime())
+                .ansedCnt(enq.getAnsedCnt())
+                .distLink(enq.getDistLink())
+                .enqLoc(enq.getEnqLoc())
+                .distRange(enq.getDistRange())
+                .build();
+        return rspDTO;
     }
 }
