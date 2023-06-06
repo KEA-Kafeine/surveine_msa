@@ -71,10 +71,10 @@ public class WspaceController {
      * @param memberId
      * @return
      */
-    @PostMapping("/gbox")
-    public ResponseEntity<Result> wspaceGboxPage(@RequestParam("lat") String lat, @RequestParam("lng") String lng, @RequestHeader Long memberId) {
+    @GetMapping("/gbox")
+    public ResponseEntity<Result> wspaceGboxPage(@RequestBody Map<String, Double> latlng, @RequestHeader Long memberId) {
         try {
-            List<EnqCBDTO> rspMap = wspaceService.getWspaceGboxPage(lat, lng, memberId);
+            List<EnqCBDTO> rspMap = wspaceService.getWspaceGboxPage(latlng.get("lat"), latlng.get("lng"), memberId);
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("GPS 설문함 설문지 조회 성공")

@@ -40,7 +40,7 @@ public class EnqFeignController {
         return result;
     }
 
-    @GetMapping("enq-service/ws3/{enqId}")
+    @GetMapping("enq-service/ws3")
     List<EnqWsDTO> getGPSEnqCBDTOList(Point myLoc) {
         List<EnqWsDTO> result = enqService.getGPSEnqWsDTOList(myLoc);
         return result;

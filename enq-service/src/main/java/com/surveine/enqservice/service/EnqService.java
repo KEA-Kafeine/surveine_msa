@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -239,12 +240,28 @@ public class EnqService {
                         .distLink(distLink)
                         .build();
             }else{
-                int lat = (int) distInfo.get("lat");
-                int lng = (int) distInfo.get("lng");
-                int distRange = (int) distInfo.get("distRange");
+                int distRange = Integer.parseInt((String) distInfo.get("distRange"));
+                double lat = (double) distInfo.get("lat");
+                double lng = (double) distInfo.get("lng");
+//                Point enqLoc = new Point((Integer) distInfo.get("lat"),(Integer) distInfo.get("lng"));
+//                Point enqLoc = new Point(Integer.parseInt((String) distInfo.get("lat")), Integer.parseInt((String) distInfo.get("lng")));
+                Point enqLoc = null;
+                try {
+                    enqLoc = new Point((int) lat, (int) lng);
+                    // 예외가 발생하지 않았을 때 수행할 작업
+                } catch (Exception ex) {
+                    // InvocationTargetException의 원인 예외를 확인하고 처리
+                    Throwable cause = ex.getCause();
+                    if (cause instanceof NumberFormatException) {
+                        // NumberFormatException 예외 처리
+                    } else {
+                        // 기타 예외 처리
+                    }
+                }
+
                 rspEnq = rspEnq.toBuilder()
                         .distType(DistType.GPS)
-                        .enqLoc(new Point(lat, lng))
+                        .enqLoc(enqLoc)
                         .distRange(distRange)
                         .build();
             }
