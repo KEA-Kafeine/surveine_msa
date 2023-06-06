@@ -3,14 +3,12 @@ package com.surveine.ansservice.dto;
 import com.surveine.ansservice.dto.anscont.AnsContDTO;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.List;
 
 @Getter
 @ToString
-@NoArgsConstructor
 public class AnsDTO {
     private Long id;
 
