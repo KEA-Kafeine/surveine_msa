@@ -235,6 +235,7 @@ public class EnqService {
             if(distType.equals(DistType.LINK.toString())){
                 String distLink = (String) distInfo.get("distLink");
                 rspEnq = rspEnq.toBuilder()
+                        .distType(DistType.LINK)
                         .distLink(distLink)
                         .build();
             }else{
@@ -242,6 +243,7 @@ public class EnqService {
                 int lng = (int) distInfo.get("lng");
                 int distRange = (int) distInfo.get("distRange");
                 rspEnq = rspEnq.toBuilder()
+                        .distType(DistType.GPS)
                         .enqLoc(new Point(lat, lng))
                         .distRange(distRange)
                         .build();
