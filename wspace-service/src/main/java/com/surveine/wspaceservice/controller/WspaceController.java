@@ -69,24 +69,24 @@ public class WspaceController {
     /**
      * ws3. GPS 설문함 설문지 조회
      */
-//    @PostMapping("/gbox")
-//    public ResponseEntity<Result> wspaceGboxPage(@RequestBody PointDTO pointDTO, @RequestHeader Long memberId) {
-//        try {
-//            Map<String, Object> rspMap = wspaceService.getWspaceGboxPage(pointDTO, memberId);
-//            Result result = Result.builder()
-//                    .isSuccess(true)
-//                    .message("GPS 설문함 설문지 조회 성공")
-//                    .result(rspMap)
-//                    .build();
-//            return ResponseEntity.ok().body(result);
-//        } catch (Exception e) {
-//            Result result = Result.builder()
-//                    .isSuccess(false)
-//                    .message("GPS 설문함 설문지 조회 실패")
-//                    .build();
-//            return ResponseEntity.badRequest().body(result);
-//        }
-//    }
+    @PostMapping("/gbox")
+    public ResponseEntity<Result> wspaceGboxPage(@RequestBody PointDTO pointDTO, @RequestHeader Long memberId) {
+        try {
+            Map<String, Object> rspMap = wspaceService.getWspaceGboxPage(pointDTO, memberId);
+            Result result = Result.builder()
+                    .isSuccess(true)
+                    .message("GPS 설문함 설문지 조회 성공")
+                    .result(rspMap)
+                    .build();
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            Result result = Result.builder()
+                    .isSuccess(false)
+                    .message("GPS 설문함 설문지 조회 실패")
+                    .build();
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
 
     /**
      * ws4. GPS 설문함 설문지 참여함 이동
