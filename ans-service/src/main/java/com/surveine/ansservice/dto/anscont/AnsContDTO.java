@@ -3,10 +3,12 @@ package com.surveine.ansservice.dto.anscont;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class AnsContDTO {
     private String qstId;
     private String qstType;
