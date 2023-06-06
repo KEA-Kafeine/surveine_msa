@@ -191,7 +191,7 @@ public class AnsService {
 
     @Transactional
     public void submitAns(Long memberId, Long ansId) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();;
+        ObjectMapper objectMapper = new ObjectMapper();
 
         Optional<Ans> optionalAns = ansRepository.findById(ansId);
         if (optionalAns.isPresent()) {
@@ -201,12 +201,13 @@ public class AnsService {
                     .build();
             ansRepository.save(modifiedAns).getId();
 
-            List<AnsContDTO> ansCont = objectMapper.readValue(modifiedAns.getCont(), new TypeReference<List<AnsContDTO>>() {});
+            List<AnsContDTO> ansCont = objectMapper.readValue(modifiedAns.getCont(), new TypeReference<>() {});
             AnsDTO ansDTO = AnsDTO.builder()
                     .id(modifiedAns.getId())
                     .enqId(modifiedAns.getEnqId())
                     .aboxId(modifiedAns.getAboxId())
                     .name(modifiedAns.getName())
+                    .ansCont(ansCont)
                     .build();
             addAnalysis(ansDTO, memberId);
         } else {
