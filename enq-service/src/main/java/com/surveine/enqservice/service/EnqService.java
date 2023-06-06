@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.surveine.enqservice.domain.Enq;
 import com.surveine.enqservice.dto.*;
-import com.surveine.enqservice.dto.analysis.AnsQstDTO;
+import com.surveine.enqservice.dto.analysis.*;
 import com.surveine.enqservice.dto.enqcont.EnqContDTO;
 import com.surveine.enqservice.enums.DistType;
 import com.surveine.enqservice.enums.EnqStatus;
@@ -200,7 +200,7 @@ public class EnqService {
     /**
      * e10. 설문지 배포(모달을 통한) Service
      */
-    public void distEnq(Long enqId, Map<String, Object> enqDistMap, Long memberId){
+    public void distEnq(Long enqId, Map<String, Object> enqDistMap, Long memberId) throws JsonProcessingException {
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
         if(enq.isPresent() && enqMemberId == memberId){
@@ -222,6 +222,7 @@ public class EnqService {
             EnqStatus enqStatus;
             if(startDateTime == null || startDateTime.isBefore(LocalDateTime.now())) {
                 enqStatus = EnqStatus.DIST_DONE;
+                defaultAnalysis(enq.get());
             }else{
                 enqStatus = EnqStatus.DIST_WAIT;
             }
@@ -274,7 +275,7 @@ public class EnqService {
     /**
      * e11. 설문지 배포상태 즉시 변경(커피콩에서) Service
      */
-    public void updateEnqStatus(EnqStatusDTO reqDTO, Long memberId){
+    public void updateEnqStatus(EnqStatusDTO reqDTO, Long memberId) throws JsonProcessingException {
         Optional<Enq> enq = enqRepository.findById(reqDTO.getEnqId());
         Long enqMemberId = enq.get().getMemberId();
         if(enq.isPresent() && enqMemberId == memberId){
@@ -286,6 +287,7 @@ public class EnqService {
                         .startDateTime(LocalDateTime.now())
                         .build();
                 enqRepository.save(rspEnq);
+                defaultAnalysis(rspEnq);
             }
             // 배포 종료일 경우: 배포 종료 날짜를 지금으로 바꿔야 함.
             else if(enqStatus == EnqStatus.ENQ_DONE) {
@@ -485,7 +487,7 @@ public class EnqService {
     /* 시간되면 자동 배포 */
 
     @Scheduled(fixedRate = 10000) // 10초마다 실행
-    public void autoChangeEnqStatus() {
+    public void autoChangeEnqStatus() throws JsonProcessingException {
         int batchSize = 1;
         /*설문 개수가 적어서 우선 1개로 해놈 10개로 바꾸고 싶으면, bachSize를 10으로 바꾸로 아래 두 줄을 그 아래 두 줄과 주석을 바꾼다*/
 //        List<Enq> distwaitEnqList = enqRepository.findTop10ByEnqStatusOrderByStartDateTimeAsc(EnqStatus.DIST_WAIT);
@@ -504,6 +506,7 @@ public class EnqService {
 //                    enq.toBuilder()
 //                            .enqStatus(EnqStatus.valueOf("DIST_DONE"))
 //                            .build();
+                    defaultAnalysis(enq);
                 }
                 enqRepository.saveAll(distwaitEnqList);
             }
@@ -551,5 +554,85 @@ public class EnqService {
                 .distRange(enq.getDistRange())
                 .build();
         return rspDTO;
+    }
+
+    /**
+     * 결과분석 저장할 때 문자열 변환
+     * @param ansQstDTO
+     * @return
+     * @throws JsonProcessingException
+     */
+    public static String getAnsAnalysis(List<AnsQstDTO> ansQstDTO) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(ansQstDTO);
+    }
+
+    /**
+     * enq가 배포된다면, 반드시 실행해야 함
+     * @param enq
+     * @throws JsonProcessingException
+     */
+    @Transactional
+    public void defaultAnalysis(Enq enq) throws JsonProcessingException {
+//        Enq enq = enqRepository.getOne(enqId);
+        List<EnqContDTO> enqDto = EnqService.getEnqCont(enq);//enq에 저장되어 있는 Qst, Opt를 전부 불러옴
+        List<AnsQstDTO> ansQstDTO = new ArrayList<>(); //저장 리스트 초기화
+        for(int enqQstIdx = 0; enqQstIdx < enqDto.size();enqQstIdx++){ //질문을 전부 순회
+            EnqContDTO enqQst = enqDto.get(enqQstIdx);
+            List<AnsOptionDTO> optionId = new ArrayList<>(); //질문 안에 있는 옵션 저장리스트
+            //질문 내 옵션 전부 순회
+            for(int enqOptIdx =0; enqOptIdx < enqQst.getOptions().size(); enqOptIdx++){
+                AnsOptionDTO saveOption = AnsOptionDTO.builder()
+                        .optId(enqQst.getOptions().get(enqOptIdx).getOptionId())
+                        .optCnt(0L)
+                        .build();
+                optionId.add(saveOption);
+            }
+            if(enqQst.getAnonymous()){ //익명일 때 초기설정
+                AnsKindOfDTO saveKindof = AnsKindOfDTO.builder()
+                        .all(optionId)
+                        .build();
+                AnsQstDTO saveQst = AnsQstDTO.builder()
+                        .qstId(enqQst.getQstId())
+                        .qstType(enqQst.getQstType())
+                        .anonymous(enqQst.getAnonymous())
+                        .qstAnsKind(saveKindof)
+                        .build();
+                ansQstDTO.add(saveQst);
+            } else {
+                AnsAgeDTO saveAge = AnsAgeDTO.builder()
+                        .ten(optionId)
+                        .twen(optionId)
+                        .thrt(optionId)
+                        .four(optionId)
+                        .fiftOver(optionId)
+                        .build();
+
+                AnsGenderDTO saveGender = AnsGenderDTO.builder()
+                        .man(optionId)
+                        .woman(optionId)
+                        .build();
+
+                AnsKindOfDTO saveKindof = AnsKindOfDTO.builder()
+                        .age(saveAge)
+                        .gender(saveGender)
+                        .all(optionId)
+                        .build();
+
+                AnsQstDTO saveQst = AnsQstDTO.builder()
+                        .qstId(enqQst.getQstId())
+                        .qstType(enqQst.getQstType())
+                        .anonymous(false)
+                        .qstAnsKind(saveKindof)
+                        .qstAns(new ArrayList<>())
+                        .build();
+
+                ansQstDTO.add(saveQst);
+            }
+        }
+//        System.out.println(ansQstDTO.toString());
+//        System.out.println(getAnsAnalysis(ansQstDTO));
+        Enq saveEnq = enq.toBuilder().enqAnalysis(getAnsAnalysis(ansQstDTO)).build();
+        enqRepository.save(saveEnq);
     }
 }
