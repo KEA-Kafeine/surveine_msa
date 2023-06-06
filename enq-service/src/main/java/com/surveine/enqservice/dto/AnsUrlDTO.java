@@ -20,6 +20,7 @@ public class AnsUrlDTO {
     private Long id;
     private Long cbox_id;
     private String name;
+    private String enqTitle;
     private List<EnqContDTO> cont;
     private Boolean isShared;
     private EnqStatus enqStatus;
@@ -32,6 +33,7 @@ public class AnsUrlDTO {
         this.id = enq.getId();
         this.cbox_id = enq.getCboxId();
         this.name = enq.getName();
+        this.enqTitle = enq.getTitle();
         this.cont = EnqService.getEnqCont(enq);
         this.isShared = enq.getIsShared();
         this.enqStatus = enq.getEnqStatus();
