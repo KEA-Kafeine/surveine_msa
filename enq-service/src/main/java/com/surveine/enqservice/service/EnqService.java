@@ -379,7 +379,7 @@ public class EnqService {
 
     public List<EnqWsDTO> getGPSEnqWsDTOList(Double lat, Double lng){
 //        Point myLoc = new Point(Integer.parseInt(lat), Integer.parseInt(lng));
-        Point myLoc = new Point(lat.intValue(), lng.intValue());
+//        Point myLoc = new Point(lat.intValue(), lng.intValue());
         List<Enq> enqList = enqRepository.findEnqByDistTypeAndEnqStatus(DistType.GPS, EnqStatus.DIST_DONE);
         List<Enq> availableEnqList = new ArrayList<>();
 

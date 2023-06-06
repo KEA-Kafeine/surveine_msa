@@ -218,7 +218,7 @@ public class AnsService {
     @Transactional
     public void addAnalysis(AnsDTO reqDto, Long memberId) throws JsonProcessingException{
         Optional<Ans> ans = ansRepository.findById(reqDto.getId());
-        if(ans.isPresent()){ //현재 접속해 있는 아이디 대조비교
+        if(ans.isPresent()) {
             Ans curAns = ans.get();
             MemberDTO member = memberServiceClient.getMemberByMemberId(memberId);
             EnqDTO enq = enqServiceClient.getEnqByEnqId(curAns.getEnqId());
