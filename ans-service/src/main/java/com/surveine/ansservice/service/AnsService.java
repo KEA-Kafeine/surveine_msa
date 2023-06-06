@@ -576,4 +576,21 @@ public class AnsService {
         }
         return false;
     }
+
+    @Transactional
+    public void moveGpsAns(Map<String, Long> reqMap, Long memberId) {
+        Long enqId = reqMap.get("enqId");
+        Long aboxId = reqMap.get("aboxId");
+        Ans newAns = Ans.builder()
+                .name(enqServiceClient.getEnqByEnqId(enqId).getName())
+                .cont("[]")
+                .enqId(enqId)
+                .memberId(memberId)
+                .aboxId(aboxId)
+                .status(AnsStatus.SAVE)
+                .isShow(true)
+                .updateDate(LocalDate.now())
+                .build();
+        ansRepository.save(newAns);
+    }
 }

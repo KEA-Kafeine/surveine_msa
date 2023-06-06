@@ -146,6 +146,35 @@ public class AnsController {
         }
     }
 
+    /**
+     * a6. GPS 설문함 설문지 참여함 이동
+     * @param memberId
+     * @param reqMap
+     * @return
+     */
+    @PostMapping("/gps/resp")
+    public ResponseEntity<Result> moveGpsAns(@RequestHeader Long memberId, @RequestBody Map<String, Long> reqMap) {
+        try {
+            ansService.moveGpsAns(reqMap, memberId);
+            Result result = Result.builder()
+                    .isSuccess(true)
+                    .message("gps설문 가져오기 성공")
+                    .build();
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            Result result = Result.builder()
+                    .isSuccess(false)
+                    .message("gps설문 가져오기 실패")
+                    .build();
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
+
+    /**
+     * a7. 응답자 랜덤 추첨
+     * @param reqMap
+     * @return
+     */
     @PostMapping("/pick/random")
     public ResponseEntity<Result> pickRandom(@RequestBody Map<String, Long> reqMap) {
         try {
@@ -165,6 +194,11 @@ public class AnsController {
         }
     }
 
+    /**
+     * a8. 응답자 선착순 추첨
+     * @param reqMap
+     * @return
+     */
     @PostMapping("/pick/order")
     public ResponseEntity<Result> pickOrder(@RequestBody Map<String, Long> reqMap) {
         try {
