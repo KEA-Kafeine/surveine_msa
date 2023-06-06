@@ -13,14 +13,19 @@ import java.util.List;
 @Getter
 public class EnqUpdateDTO {
     private Long enqId;
+    private String enqTitle;
     @NotNull
     private final String enqName;
     @NotNull
     private final List<EnqContDTO> enqCont;
+    private Object nodes;
+
     @Builder(toBuilder = true)
-    public EnqUpdateDTO(Long enqId, String enqName, List<EnqContDTO> enqCont) {
+    public EnqUpdateDTO(Long enqId, String enqTitle, Object nodes, String enqName, List<EnqContDTO> enqCont) {
         this.enqId = enqId;
+        this.enqTitle = enqTitle;
         this.enqName = enqName;
+        this.nodes = nodes;
         this.enqCont = enqCont;
     }
 }

@@ -40,6 +40,9 @@ public class Enq {
     @Column(name = "enq_cont", columnDefinition = "TEXT")
     private String cont;
 
+    @Column(name = "enq_nodes", columnDefinition = "TEXT")
+    private String nodes;
+
     @Column(name = "is_shared")
     private Boolean isShared;
 
@@ -95,11 +98,12 @@ public class Enq {
     private GeoModule geoBuffer;
 
     @Builder(toBuilder = true)
-    public Enq(Long id, Long memberId, Long cboxId, String name, String title, String cont, Boolean isShared, EnqStatus enqStatus, DistType distType, LocalDate updateDate, Long favCount, String enqAnalysis, Long enqReport, GeoModule geoBuffer, Integer quota, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer ansedCnt, String distLink, Point myLocation, Integer distRange) {
+    public Enq(Long id, Long memberId, Long cboxId, String name, String title, String cont, String nodes, Boolean isShared, EnqStatus enqStatus, DistType distType, LocalDate updateDate, Long favCount, String enqAnalysis, Long enqReport, GeoModule geoBuffer, Integer quota, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer ansedCnt, String distLink, Point myLocation, Integer distRange) {
         this.id = id;
         this.memberId = memberId;
         this.cboxId = cboxId;
         this.name = name;
+        this.nodes = nodes;
         this.title = title;
         this.cont = cont;
         this.isShared = isShared;

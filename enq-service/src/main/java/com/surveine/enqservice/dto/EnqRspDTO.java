@@ -22,6 +22,7 @@ public class EnqRspDTO {
     private String enqTitle;
     private String name;
     private List<EnqContDTO> cont;
+    private String nodes;
     private Boolean isShared;
     private EnqStatus enqStatus;
     private DistType distType;
@@ -34,6 +35,7 @@ public class EnqRspDTO {
         this.enqTitle = enq.getTitle();
         this.name = enq.getName();
         this.cont = EnqService.getEnqCont(enq);
+        this.nodes = enq.getNodes();
         this.isShared = enq.getIsShared();
         this.enqStatus = enq.getEnqStatus();
         this.distType = enq.getDistType();

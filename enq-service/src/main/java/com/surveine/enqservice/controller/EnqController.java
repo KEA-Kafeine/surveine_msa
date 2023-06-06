@@ -1,6 +1,7 @@
 package com.surveine.enqservice.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.surveine.enqservice.config.Result;
 import com.surveine.enqservice.domain.Enq;
 import com.surveine.enqservice.dto.*;
@@ -46,6 +47,7 @@ public class EnqController {
      */
     @PutMapping("/create")
     public ResponseEntity<Result> createEnq(@RequestBody EnqCreateDTO reqDTO, @RequestHeader Long memberId) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
         Long enqId = enqService.createEnq(reqDTO, memberId);
         if(enqId > 0L){
             EnqCreateRspDTO createRspDTO = EnqCreateRspDTO.builder()
@@ -53,6 +55,7 @@ public class EnqController {
                     .enqTitle(reqDTO.getEnqTitle())
                     .cboxId(reqDTO.getCboxId())
                     .cont(reqDTO.getEnqCont())
+                    .nodes(mapper.writeValueAsString(reqDTO.getNodes()))
                     .enqId(enqId)
                     .build();
 

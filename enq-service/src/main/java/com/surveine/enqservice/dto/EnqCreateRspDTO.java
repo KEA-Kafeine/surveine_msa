@@ -20,15 +20,17 @@ public class EnqCreateRspDTO {
     private String enqName;
     private String enqTitle;
     private List<EnqContDTO> enqCont;
+    private String nodes;
     private String enqNanoId;
 
     @Builder
-    public EnqCreateRspDTO(Long enqId, Long memberId, Long cboxId, String enqTitle, String enqName, List<EnqContDTO> cont, String enqNanoId) {
+    public EnqCreateRspDTO(Long enqId, Long memberId, Long cboxId, String enqTitle, String enqName, List<EnqContDTO> cont, String nodes, String enqNanoId) {
         this.enqId = enqId;
         this.memberId = memberId;
         this.cboxId = cboxId;
         this.enqTitle = enqTitle;
         this.enqName = enqName;
+        this.nodes = nodes;
         this.enqCont = cont;
         this.enqNanoId = enqNanoId;
     }
