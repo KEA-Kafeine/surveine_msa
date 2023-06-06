@@ -38,7 +38,6 @@ public class EnqDTO {
 
     private Long enqReport;
 
-    private GeoModule geoBuffer;
 
 
     /**
@@ -58,12 +57,14 @@ public class EnqDTO {
     private String distLink;
 
     //gps
-    private Point enqLoc;
+    private Double lat;
+
+    private Double lng;
 
     private Integer distRange;
 
     @Builder(toBuilder = true)
-    public EnqDTO(Long id, Long memberId, Long cboxId, String name, String title, String cont, Boolean isShared, EnqStatus enqStatus, DistType distType, LocalDate updateDate, Long favCount, String enqAnalysis, Long enqReport, GeoModule geoBuffer, Integer quota, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer ansedCnt, String distLink, Point enqLoc, Integer distRange) {
+    public EnqDTO(Long id, Long memberId, Long cboxId, String name, String title, String cont, Boolean isShared, EnqStatus enqStatus, DistType distType, LocalDate updateDate, Long favCount, String enqAnalysis, Long enqReport, Integer quota, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer ansedCnt, String distLink, Double lat, Double lng, Integer distRange) {
         this.id = id;
         this.memberId = memberId;
         this.cboxId = cboxId;
@@ -77,13 +78,13 @@ public class EnqDTO {
         this.favCount = favCount;
         this.enqAnalysis = enqAnalysis;
         this.enqReport = enqReport;
-        this.geoBuffer = geoBuffer;
         this.quota = quota;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.ansedCnt = ansedCnt;
         this.distLink = distLink;
-        this.enqLoc = enqLoc;
+        this.lat = lat;
+        this.lng = lng;
         this.distRange = distRange;
     }
 }

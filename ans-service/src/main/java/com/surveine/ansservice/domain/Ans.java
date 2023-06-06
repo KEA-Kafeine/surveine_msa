@@ -35,7 +35,7 @@ public class Ans {
     @Column(name = "abox_id")
     private Long aboxId;
 
-    @Column(name = "ans_status")
+    @Column(name = "ans_state")
     @Enumerated(EnumType.STRING)
     private AnsStatus status;
 
