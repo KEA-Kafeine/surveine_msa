@@ -27,7 +27,7 @@ public class AnsController {
     public ResponseEntity<Result> createAns(@RequestHeader Long memberId, @RequestBody AnsCreateDTO reqDTO) {
         try {
             Boolean rspBool = ansService.isAnsExists(memberId, reqDTO.getEnqId());
-            if (rspBool) {
+            if (!rspBool) {
                 Map<String, Long> rspMap = ansService.createAns(memberId, reqDTO);
                 Result result = Result.builder()
                         .isSuccess(true)
