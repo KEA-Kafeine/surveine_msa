@@ -197,7 +197,6 @@ public class EnqService {
                     .build();
         }else return null;
     }
-
     /**
      * e10. 설문지 배포(모달을 통한) Service
      */
@@ -261,7 +260,8 @@ public class EnqService {
 
                 rspEnq = rspEnq.toBuilder()
                         .distType(DistType.GPS)
-                        .enqLoc(enqLoc)
+                        .enqLat(lat)
+                        .enqLng(lng)
                         .distRange(distRange)
                         .build();
             }
@@ -313,7 +313,8 @@ public class EnqService {
                     .startDateTime(null)
                     .endDateTime(null)
                     .distLink(null)
-                    .enqLoc(null)
+                    .enqLat(null)
+                    .enqLng(null)
                     .distRange(0)
                     .build();
             enqRepository.save(rspEnq);
@@ -321,6 +322,7 @@ public class EnqService {
             throw new RuntimeException("오류 발생");
         }
     }
+
 
     /**
      * e13. 설문지 배포 링크 조회 Service
@@ -375,12 +377,14 @@ public class EnqService {
         return enqWsDTOList;
     }
 
-    public List<EnqWsDTO> getGPSEnqWsDTOList(Point myLoc){
+    public List<EnqWsDTO> getGPSEnqWsDTOList(Double lat, Double lng){
+//        Point myLoc = new Point(Integer.parseInt(lat), Integer.parseInt(lng));
+        Point myLoc = new Point(lat.intValue(), lng.intValue());
         List<Enq> enqList = enqRepository.findEnqByDistTypeAndEnqStatus(DistType.GPS, EnqStatus.DIST_DONE);
         List<Enq> availableEnqList = new ArrayList<>();
 
         for (Enq enq : enqList) {
-            double distance = calculateDistance(myLoc, enq.getEnqLoc());
+            double distance = calculateDistance(lat, lng, enq.getEnqLat(), enq.getEnqLng());
             if (distance <= Double.parseDouble(String.valueOf(enq.getDistRange()))) {
                 availableEnqList.add(enq);
             }
@@ -394,26 +398,22 @@ public class EnqService {
         return rspList;
     }
 
-    private double calculateDistance(Point loc1, Point loc2) {
+    private double calculateDistance(Double lat1, Double lng1, Double lat2, Double lng2) {
         final int R = 6371; // 지구 반지름 (km)
-        double lat1 = Math.toRadians(loc1.getX());
-        double lon1 = Math.toRadians(loc1.getY());
-        double lat2 = Math.toRadians(loc2.getX());
-        double lon2 = Math.toRadians(loc2.getY());
 
-        double dlon = lon2 - lon1;
+        double dlon = lng2 - lng1;
         double dlat = lat2 - lat1;
 
         double a = Math.sin(dlat / 2) * Math.sin(dlat / 2) +
                 Math.cos(lat1) * Math.cos(lat2) *
                         Math.sin(dlon / 2) * Math.sin(dlon / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+//        long c2 = ((long) 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
 
         double distance = R * c * 1000; // km 단위를 m 단위로 변환
 
         return distance;
     }
-
 
     public DistType getDistTypeByEnqId(Long enqId) {
         DistType distType = enqRepository.findById(enqId).get().getDistType();
@@ -442,7 +442,8 @@ public class EnqService {
                 .endDateTime(enq.getEndDateTime())
                 .ansedCnt(enq.getAnsedCnt())
                 .distLink(enq.getDistLink())
-                .enqLoc(enq.getEnqLoc())
+                .enqLat(enq.getLat())
+                .enqLng(enq.getLng())
                 .distRange(enq.getDistRange())
                 .build();
         enqRepository.save(modifiedEnq);
@@ -545,7 +546,8 @@ public class EnqService {
                 .endDateTime(enq.getEndDateTime())
                 .ansedCnt(enq.getAnsedCnt())
                 .distLink(enq.getDistLink())
-                .enqLoc(enq.getEnqLoc())
+                .lat(enq.getEnqLat())
+                .lng(enq.getEnqLng())
                 .distRange(enq.getDistRange())
                 .build();
         return rspDTO;

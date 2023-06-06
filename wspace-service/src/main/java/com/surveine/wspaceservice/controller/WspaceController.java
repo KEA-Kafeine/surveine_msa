@@ -3,6 +3,7 @@ package com.surveine.wspaceservice.controller;
 import com.surveine.wspaceservice.config.Result;
 import com.surveine.wspaceservice.domain.Cbox;
 import com.surveine.wspaceservice.dto.EnqCBDTO;
+import com.surveine.wspaceservice.dto.PointDTO;
 import com.surveine.wspaceservice.exception.AuthException;
 import com.surveine.wspaceservice.service.WspaceService;
 import lombok.Getter;
@@ -65,16 +66,13 @@ public class WspaceController {
             return ResponseEntity.badRequest().body(result);
         }
     }
-
     /**
      * ws3. GPS 설문함 설문지 조회
-     * @param memberId
-     * @return
      */
     @PostMapping("/gbox")
-    public ResponseEntity<Result> wspaceGboxPage(@RequestBody Map<String, Double> latlng, @RequestHeader Long memberId) {
+    public ResponseEntity<Result> wspaceGboxPage(@RequestBody PointDTO pointDTO, @RequestHeader Long memberId) {
         try {
-            List<EnqCBDTO> rspMap = wspaceService.getWspaceGboxPage(latlng.get("lat"), latlng.get("lng"), memberId);
+            Map<String, Object> rspMap = wspaceService.getWspaceGboxPage(pointDTO, memberId);
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("GPS 설문함 설문지 조회 성공")
