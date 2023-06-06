@@ -197,7 +197,6 @@ public class EnqService {
                     .build();
         }else return null;
     }
-
     /**
      * e10. 설문지 배포(모달을 통한) Service
      */
@@ -324,6 +323,7 @@ public class EnqService {
         }
     }
 
+
     /**
      * e13. 설문지 배포 링크 조회 Service
      */
@@ -376,6 +376,7 @@ public class EnqService {
                 .collect(Collectors.toList());
         return enqWsDTOList;
     }
+
     public List<EnqWsDTO> getGPSEnqWsDTOList(Double lat, Double lng){
 //        Point myLoc = new Point(Integer.parseInt(lat), Integer.parseInt(lng));
         Point myLoc = new Point(lat.intValue(), lng.intValue());
@@ -413,7 +414,6 @@ public class EnqService {
 
         return distance;
     }
-
 
     public DistType getDistTypeByEnqId(Long enqId) {
         DistType distType = enqRepository.findById(enqId).get().getDistType();
@@ -523,5 +523,33 @@ public class EnqService {
                 enqRepository.saveAll(distdoneEnqList);
             }
         }
+    }
+
+    public EnqDTO getEnqByEnqId(Long enqId) {
+        Enq enq = enqRepository.findById(enqId).get();
+        EnqDTO rspDTO = EnqDTO.builder()
+                .id(enq.getId())
+                .memberId(enq.getMemberId())
+                .cboxId(enq.getCboxId())
+                .name(enq.getName())
+                .title(enq.getTitle())
+                .cont(enq.getCont())
+                .isShared(enq.getIsShared())
+                .enqStatus(enq.getEnqStatus())
+                .distType(enq.getDistType())
+                .updateDate(enq.getUpdateDate())
+                .favCount(enq.getFavCount())
+                .enqAnalysis(enq.getEnqAnalysis())
+                .enqReport(enq.getEnqReport())
+                .quota(enq.getQuota())
+                .startDateTime(enq.getStartDateTime())
+                .endDateTime(enq.getEndDateTime())
+                .ansedCnt(enq.getAnsedCnt())
+                .distLink(enq.getDistLink())
+                .lat(enq.getEnqLat())
+                .lng(enq.getEnqLng())
+                .distRange(enq.getDistRange())
+                .build();
+        return rspDTO;
     }
 }
