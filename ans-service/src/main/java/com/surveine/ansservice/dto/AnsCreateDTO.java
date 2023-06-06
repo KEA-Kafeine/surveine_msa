@@ -1,7 +1,6 @@
 package com.surveine.ansservice.dto;
 
 import com.surveine.ansservice.dto.anscont.AnsContDTO;
-import com.surveine.ansservice.enums.AnsStatus;
 import lombok.Builder;
 import lombok.Getter;
 

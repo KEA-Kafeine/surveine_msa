@@ -524,31 +524,4 @@ public class EnqService {
             }
         }
     }
-
-    public EnqDTO getEnqByEnqId(Long enqId) {
-        Enq enq = enqRepository.findById(enqId).get();
-        EnqDTO rspDTO = EnqDTO.builder()
-                .id(enq.getId())
-                .memberId(enq.getMemberId())
-                .cboxId(enq.getCboxId())
-                .name(enq.getName())
-                .title(enq.getTitle())
-                .cont(enq.getCont())
-                .isShared(enq.getIsShared())
-                .enqStatus(enq.getEnqStatus())
-                .distType(enq.getDistType())
-                .updateDate(enq.getUpdateDate())
-                .favCount(enq.getFavCount())
-                .enqAnalysis(enq.getEnqAnalysis())
-                .enqReport(enq.getEnqReport())
-                .quota(enq.getQuota())
-                .startDateTime(enq.getStartDateTime())
-                .endDateTime(enq.getEndDateTime())
-                .ansedCnt(enq.getAnsedCnt())
-                .distLink(enq.getDistLink())
-                .enqLoc(enq.getEnqLoc())
-                .distRange(enq.getDistRange())
-                .build();
-        return rspDTO;
-    }
 }

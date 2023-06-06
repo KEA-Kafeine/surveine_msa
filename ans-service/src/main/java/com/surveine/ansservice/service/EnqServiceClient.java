@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient("enq-service")
 public interface EnqServiceClient {
 
-    @GetMapping("/enq-service/enq/{enqId}")
+    @GetMapping("/enq-service/enq/{enqId")
     EnqDTO getEnqByEnqId(@PathVariable Long enqId);
 
     @GetMapping("/enq-service/ws2/{enqId}")

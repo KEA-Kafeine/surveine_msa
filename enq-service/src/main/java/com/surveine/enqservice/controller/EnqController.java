@@ -190,7 +190,7 @@ public class EnqController {
                     .message("설문지 공유상태 변경 성공")
                     .build();
             return ResponseEntity.ok(result);
-        }catch (Exception e) {
+        }catch (Exception e){
             Result result = Result.builder()
                     .isSuccess(false)
                     .message("설문지 공유상태 변경 실패")

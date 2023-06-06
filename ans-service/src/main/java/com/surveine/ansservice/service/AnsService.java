@@ -103,7 +103,6 @@ public class AnsService {
         Ans modifiedAns = ans.toBuilder()
                 .name(reqDTO.getName())
                 .cont(objectMapper.writeValueAsString(reqDTO.getAnsCont()))
-                .updateDate(LocalDate.now())
                 .build();
 
         ansRepository.save(modifiedAns);
@@ -191,7 +190,7 @@ public class AnsService {
 
     @Transactional
     public void submitAns(Long memberId, Long ansId) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();;
 
         Optional<Ans> optionalAns = ansRepository.findById(ansId);
         if (optionalAns.isPresent()) {
@@ -201,13 +200,12 @@ public class AnsService {
                     .build();
             ansRepository.save(modifiedAns).getId();
 
-            List<AnsContDTO> ansCont = objectMapper.readValue(modifiedAns.getCont(), new TypeReference<>() {});
+            List<AnsContDTO> ansCont = objectMapper.readValue(modifiedAns.getCont(), new TypeReference<List<AnsContDTO>>() {});
             AnsDTO ansDTO = AnsDTO.builder()
                     .id(modifiedAns.getId())
                     .enqId(modifiedAns.getEnqId())
                     .aboxId(modifiedAns.getAboxId())
                     .name(modifiedAns.getName())
-                    .ansCont(ansCont)
                     .build();
             addAnalysis(ansDTO, memberId);
         } else {
@@ -216,7 +214,8 @@ public class AnsService {
     }
 
     @Transactional
-    public void addAnalysis(AnsDTO reqDto, Long memberId) throws JsonProcessingException{
+    public boolean addAnalysis(AnsDTO reqDto, Long memberId) throws JsonProcessingException{
+        System.out.println(reqDto.toString());
         Optional<Ans> ans = ansRepository.findById(reqDto.getId());
         if(ans.isPresent()){ //현재 접속해 있는 아이디 대조비교
             Ans curAns = ans.get();
@@ -225,6 +224,7 @@ public class AnsService {
 
             List<AnsQstDTO> updateAnalysis = new ArrayList<>(); //덮어쓸 리스트
             List<AnsQstDTO> allAnalysis = setAnsAnalysis(enq.getEnqAnalysis()); // 저장되어 있는 리스트
+            //List<AnsContDTO> userAns = reqDto.getAnsCont();//유저가 응답한 리스트
             List<AnsAnlContDTO> userAns = parseData(reqDto.getAnsCont());
 
             GenderType gender = member.getGender();
@@ -237,11 +237,9 @@ public class AnsService {
                     updateAnalysis.add(matchAnalysis);
                     continue;
                 }
-
                 AnsAnlContDTO userAnsCont = userAns.get(idx);//유저가 응답한 리스트 갖고오기
                 List<String> userOpt = userAnsCont.getOptionId();//옵션도 가져와
                 String userQstId = userAnsCont.getQstId();//질문 아이디도 갖고와
-
                 if(userOpt.isEmpty()){
                     updateAnalysis.add(matchAnalysis);
                     continue;
@@ -260,11 +258,12 @@ public class AnsService {
                         List<AnsOptionDTO> updateAllOption = new ArrayList<>(); //저장할 옵션
                         List<AnsOptionDTO> currentAllOption = currentKindOf.getAll();
 
+                        //TODO: 옵션 수정
                         int userAnsOptIdx = 0; //자신이 갖고있는 옵션 정보 인덱스
                         for(int optIdx = 0; optIdx < currentAllOption.size(); optIdx++){ //All 저장
                             AnsOptionDTO ansOptionDTO = currentAllOption.get(optIdx);
 
-                            if(userAnsOptIdx >= userOpt.size()){ //응답이 끝나면 나머지 저장하고 끝
+                            if(userAnsOptIdx > userOpt.size()){ //응답이 끝나면 나머지 저장하고 끝
                                 updateAllOption.add(ansOptionDTO);
                                 continue;
                             }
@@ -316,7 +315,10 @@ public class AnsService {
                                 userAnsOptIdx++;
                                 continue;
                             }
-                            updateAllOpt.add(ansOptionDTO);
+
+                            if (!containsOptId(updateAllOpt, ansOptionDTO.getOptId())) {
+                                updateAllOpt.add(ansOptionDTO);
+                            }
                         }
                         //All저장
                         currentKindOf = currentKindOf.toBuilder().all(updateAllOpt).build();
@@ -337,7 +339,10 @@ public class AnsService {
                                     userAnsOptIdx++;
                                     continue;
                                 }
-                                updateGenderOpt.add(index);
+
+                                if (!containsOptId(updateGenderOpt, index.getOptId())) {
+                                    updateGenderOpt.add(index);
+                                }
                             }
 
                             AnsGenderDTO saveGender = currentKindOf.getGender()
@@ -362,7 +367,9 @@ public class AnsService {
                                     userAnsOptIdx++;
                                     continue;
                                 }
-                                updateGenderOpt.add(index);
+                                if (!containsOptId(updateGenderOpt, index.getOptId())) {
+                                    updateGenderOpt.add(index);
+                                }
                             }
                             AnsGenderDTO saveGender = currentKindOf.getGender()
                                     .toBuilder()
@@ -395,7 +402,9 @@ public class AnsService {
                                     userAnsOptIdx++;
                                     continue;
                                 }
-                                updateAgeOpt.add(index);
+                                if (!containsOptId(updateAgeOpt, index.getOptId())) {
+                                    updateAgeOpt.add(index);
+                                }
                             }
                             AnsAgeDTO saveAge = curAge
                                     .toBuilder()
@@ -419,7 +428,9 @@ public class AnsService {
                                     userAnsOptIdx++;
                                     continue;
                                 }
-                                updateAgeOpt.add(index);
+                                if (!containsOptId(updateAgeOpt, index.getOptId())) {
+                                    updateAgeOpt.add(index);
+                                }
                             }
                             AnsAgeDTO saveAge = curAge
                                     .toBuilder()
@@ -443,7 +454,9 @@ public class AnsService {
                                     userAnsOptIdx++;
                                     continue;
                                 }
-                                updateAgeOpt.add(index);
+                                if (!containsOptId(updateAgeOpt, index.getOptId())) {
+                                    updateAgeOpt.add(index);
+                                }
                             }
                             AnsAgeDTO saveAge = curAge
                                     .toBuilder()
@@ -468,7 +481,9 @@ public class AnsService {
                                     userAnsOptIdx++;
                                     continue;
                                 }
-                                updateAgeOpt.add(index);
+                                if (!containsOptId(updateAgeOpt, index.getOptId())) {
+                                    updateAgeOpt.add(index);
+                                }
                             }
                             AnsAgeDTO saveAge = curAge
                                     .toBuilder()
@@ -493,7 +508,9 @@ public class AnsService {
                                     userAnsOptIdx++;
                                     continue;
                                 }
-                                updateAgeOpt.add(index);
+                                if (!containsOptId(updateAgeOpt, index.getOptId())) {
+                                    updateAgeOpt.add(index);
+                                }
                             }
 
                             AnsAgeDTO saveAge = curAge.toBuilder()
@@ -519,8 +536,12 @@ public class AnsService {
                 }
                 updateAnalysis.add(matchAnalysis);
             }
+            System.out.println(getAnsAnalysis(updateAnalysis));
             enq = enq.toBuilder().enqAnalysis(getAnsAnalysis(updateAnalysis)).build();
             enqServiceClient.save(enq);
+            return true;
+        } else {
+            return false;
         }
     }
 
