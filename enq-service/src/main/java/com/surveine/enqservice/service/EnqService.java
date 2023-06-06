@@ -38,11 +38,13 @@ public class EnqService {
      * @throws JsonProcessingException
      */
     public EnqRspDTO getEnq(Long enqId, Long memberId) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
         Optional<Enq> enq =  enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
         if(enq.isPresent() && memberId == enqMemberId){
             return EnqRspDTO.builder()
                     .enq(enq.get())
+                    .nodes(mapper.readValue(enq.get().getNodes(), new TypeReference<>() {}))
                     .build();
         }else{
             return null;
