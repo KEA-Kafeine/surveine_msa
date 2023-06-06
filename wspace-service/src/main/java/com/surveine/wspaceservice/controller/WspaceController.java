@@ -68,7 +68,6 @@ public class WspaceController {
             return ResponseEntity.badRequest().body(result);
         }
     }
-
     /**
      * ws3. GPS 설문함 설문지 조회
      * @param memberId

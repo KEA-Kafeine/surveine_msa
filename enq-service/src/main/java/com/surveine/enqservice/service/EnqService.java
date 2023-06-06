@@ -197,7 +197,6 @@ public class EnqService {
                     .build();
         }else return null;
     }
-
     /**
      * e10. 설문지 배포(모달을 통한) Service
      */
@@ -322,6 +321,7 @@ public class EnqService {
         }
     }
 
+
     /**
      * e13. 설문지 배포 링크 조회 Service
      */
@@ -375,7 +375,9 @@ public class EnqService {
         return enqWsDTOList;
     }
 
-    public List<EnqWsDTO> getGPSEnqWsDTOList(Point myLoc){
+    public List<EnqWsDTO> getGPSEnqWsDTOList(Double lat, Double lng){
+//        Point myLoc = new Point(Integer.parseInt(lat), Integer.parseInt(lng));
+        Point myLoc = new Point(lat.intValue(), lng.intValue());
         List<Enq> enqList = enqRepository.findEnqByDistTypeAndEnqStatus(DistType.GPS, EnqStatus.DIST_DONE);
         List<Enq> availableEnqList = new ArrayList<>();
 
@@ -413,7 +415,6 @@ public class EnqService {
 
         return distance;
     }
-
 
     public DistType getDistTypeByEnqId(Long enqId) {
         DistType distType = enqRepository.findById(enqId).get().getDistType();
@@ -545,7 +546,8 @@ public class EnqService {
                 .endDateTime(enq.getEndDateTime())
                 .ansedCnt(enq.getAnsedCnt())
                 .distLink(enq.getDistLink())
-                .enqLoc(enq.getEnqLoc())
+                .lat(enq.getEnqLat())
+                .lng(enq.getEnqLng())
                 .distRange(enq.getDistRange())
                 .build();
         return rspDTO;
