@@ -98,6 +98,12 @@ public class AnsController {
         }
     }
 
+    /**
+     * a4. 개별 응답지 제출
+     * @param memberId
+     * @param ansId
+     * @return
+     */
     @PutMapping("/submit/{ansId}")
     public ResponseEntity<Result> submitAns(@RequestHeader Long memberId, @PathVariable Long ansId) {
         try {

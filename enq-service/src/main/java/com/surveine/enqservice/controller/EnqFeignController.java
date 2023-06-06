@@ -51,5 +51,9 @@ public class EnqFeignController {
         enqService.setResult(enq);
     }
 
-
+    @GetMapping("/enq-service/enq/{enqId}")
+    EnqDTO getEnqByEnqId(@PathVariable Long enqId) {
+        EnqDTO rspDTO = enqService.getEnqByEnqId(enqId);
+        return rspDTO;
+    }
 }
