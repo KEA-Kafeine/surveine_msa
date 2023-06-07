@@ -36,4 +36,10 @@ public class AnsFeignController {
         String rsp = ansService.getAnsStatus(reqMap.get("enqId"), memberId);
         return rsp;
     }
+
+    @GetMapping("/ans-service/ans-count/{enqId}")
+    Long getAnsCountByEnqId(@PathVariable Long enqId) {
+        Long rsp = ansService.getAnsCountByEnqId(enqId);
+        return rsp;
+    }
 }

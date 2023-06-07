@@ -21,4 +21,6 @@ public interface AnsRepository extends JpaRepository<Ans, Long> {
     List<Ans> findByEnqId(Long enqId);
 
     Optional<Ans> findByMemberIdAndEnqId(Long memberId, Long enqId);
+
+    Long countByEnqId(Long enqId);
 }

@@ -28,9 +28,10 @@ public class EnqRspDTO {
     private EnqStatus enqStatus;
     private DistType distType;
     private LocalDate updateDate;
+    private Long answerCnt;
 
     @Builder
-    public EnqRspDTO(Enq enq, Object nodes) throws JsonProcessingException {
+    public EnqRspDTO(Enq enq, Object nodes, Long answerCnt) throws JsonProcessingException {
         this.id = enq.getId();
         this.cboxId = enq.getCboxId();
         this.enqTitle = enq.getTitle();
@@ -40,6 +41,7 @@ public class EnqRspDTO {
         this.isShared = enq.getIsShared();
         this.enqStatus = enq.getEnqStatus();
         this.distType = enq.getDistType();
+        this.answerCnt = answerCnt;
         this.updateDate = enq.getUpdateDate();
     }
 
