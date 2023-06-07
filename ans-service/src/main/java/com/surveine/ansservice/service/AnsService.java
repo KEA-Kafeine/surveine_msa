@@ -192,16 +192,28 @@ public class AnsService {
     /**
      * a9. 개별 응답지 조회 Service
      */
-    public Map<String, Object> getAns(Long enqId, Long ansId){
-        Optional<Ans> ans = ansRepository.findById(ansId);
+    public Map<String, Object> getAns(Long enqId, Long ansId) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Ans ans = ansRepository.findById(ansId).get();
         EnqDTO enq = enqServiceClient.getEnqByEnqId(enqId);
+
+        Map<String, Object> ansMap = new HashMap<>();
+        ansMap.put("aboxId", ans.getAboxId());
+        ansMap.put("cont", mapper.readValue(ans.getCont(), new TypeReference<>() {}));
+        ansMap.put("responseTime", String.valueOf(ans.getResponseTime()));
+        ansMap.put("status", String.valueOf(ans.getStatus()));
+
+        Map<String, Object> enqMap = new HashMap<>();
+        enqMap.put("cont", mapper.readValue(enq.getCont(), new TypeReference<>() {}));
+        enqMap.put("title", enq.getTitle());
+
         Map<String, Object> rspMap = new HashMap<>();
-        if(ans.isPresent()){
-            rspMap.put("ans", ans.get());
-            rspMap.put("enq", enq);
-        }
+        rspMap.put("ans", ansMap);
+        rspMap.put("enq", enqMap);
+
         return rspMap;
     }
+
 
     @Transactional
     public void submitAns(Long memberId, Long ansId) throws JsonProcessingException {
