@@ -389,10 +389,14 @@ public class EnqService {
             Map<String, Object> availableEnq = new HashMap<>();
             distance = calculateDistance(lat, lng, enq.getEnqLat(), enq.getEnqLng());
             if (distance <= Double.parseDouble(String.valueOf(enq.getDistRange()))) {
-                availableEnq.put("enq", enq);
+                EnqWsDTO enqWsDTO = EnqWsDTO.builder()
+                        .enq(enq)
+                        .build();
+                availableEnq.put("enq", enqWsDTO);
                 availableEnq.put("distance", String.format("%.1f", distance) + "m");
                 availableEnqList.add(availableEnq);
             }
+
         }
         return availableEnqList;
     }
