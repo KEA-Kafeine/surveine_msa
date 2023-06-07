@@ -611,7 +611,7 @@ public class AnsService {
         Long enqId = reqMap.get("enqId");
         Long aboxId = reqMap.get("aboxId");
         Ans newAns = Ans.builder()
-                .enqTitle(enqServiceClient.getEnqByEnqId(enqId).getName())
+                .enqTitle(enqServiceClient.getEnqByEnqId(enqId).getTitle())
                 .cont("[]")
                 .enqId(enqId)
                 .memberId(memberId)
