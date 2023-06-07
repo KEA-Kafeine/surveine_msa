@@ -505,7 +505,7 @@ public class EnqService {
             LocalDateTime tenthEnqStartDate = distwaitEnqList.get(batchSize - 1).getStartDateTime();
 
             // 10번째의 startDate가 현재 시간보다 앞이면 enqState를 "DIST_WAIT"에서 "DIST_DONE"으로 변경
-            if (tenthEnqStartDate.isBefore(currentDateTime)) {
+            if (tenthEnqStartDate != null && tenthEnqStartDate.isBefore(currentDateTime)) {
                 for (Enq enq : distwaitEnqList) {
                     enq.setEnqStatus(EnqStatus.valueOf("DIST_DONE"));
 //                    enq.toBuilder()
@@ -521,7 +521,7 @@ public class EnqService {
             LocalDateTime tenthEnqEndDate = distdoneEnqList.get(batchSize - 1).getEndDateTime();
 
             // 10번째의 endDate가 현재 시간보다 앞이면 enqState를 "DIST_DONE"에서 "ENQ_DONE"으로 변경
-            if(tenthEnqEndDate.isBefore(currentDateTime)){
+            if(tenthEnqEndDate != null && tenthEnqEndDate.isBefore(currentDateTime)){
                 for(Enq enq : distdoneEnqList){
                     enq.setEnqStatus(EnqStatus.valueOf("ENQ_DONE"));
 //                    enq.toBuilder()
