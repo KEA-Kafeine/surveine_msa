@@ -24,6 +24,8 @@ public class EnqDTO {
 
     private String cont;
 
+    private String nodes;
+
     private Boolean isShared;
 
     private EnqStatus enqStatus;
@@ -37,8 +39,6 @@ public class EnqDTO {
     private String enqAnalysis;
 
     private Long enqReport;
-
-    private GeoModule geoBuffer;
 
 
     /**
@@ -58,18 +58,21 @@ public class EnqDTO {
     private String distLink;
 
     //gps
-    private Point enqLoc;
+    private Double enqLat;
+
+    private Double enqLng;
 
     private Integer distRange;
 
     @Builder(toBuilder = true)
-    public EnqDTO(Long id, Long memberId, Long cboxId, String name, String title, String cont, Boolean isShared, EnqStatus enqStatus, DistType distType, LocalDate updateDate, Long favCount, String enqAnalysis, Long enqReport, GeoModule geoBuffer, Integer quota, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer ansedCnt, String distLink, Point enqLoc, Integer distRange) {
+    public EnqDTO(Long id, Long memberId, Long cboxId, String name, String title, String cont, String nodes, Boolean isShared, EnqStatus enqStatus, DistType distType, LocalDate updateDate, Long favCount, String enqAnalysis, Long enqReport, Integer quota, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer ansedCnt, String distLink, Double enqLat, Double enqLng, Integer distRange) {
         this.id = id;
         this.memberId = memberId;
         this.cboxId = cboxId;
         this.name = name;
         this.title = title;
         this.cont = cont;
+        this.nodes = nodes;
         this.isShared = isShared;
         this.enqStatus = enqStatus;
         this.distType = distType;
@@ -77,13 +80,13 @@ public class EnqDTO {
         this.favCount = favCount;
         this.enqAnalysis = enqAnalysis;
         this.enqReport = enqReport;
-        this.geoBuffer = geoBuffer;
         this.quota = quota;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.ansedCnt = ansedCnt;
         this.distLink = distLink;
-        this.enqLoc = enqLoc;
+        this.enqLat = enqLat;
+        this.enqLng = enqLng;
         this.distRange = distRange;
     }
 }

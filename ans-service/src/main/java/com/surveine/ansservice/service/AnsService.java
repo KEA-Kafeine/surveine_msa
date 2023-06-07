@@ -548,7 +548,9 @@ public class AnsService {
                 }
                 updateAnalysis.add(matchAnalysis);
             }
-            enq = enq.toBuilder().enqAnalysis(getAnsAnalysis(updateAnalysis)).build();
+            enq = enq.toBuilder()
+                    .enqAnalysis(getAnsAnalysis(updateAnalysis))
+                    .build();
             enqServiceClient.save(enq);
         }
     }

@@ -388,6 +388,7 @@ public class EnqService {
         double distance = 0;
         for (Enq enq : enqList) {
             Map<String, Object> availableEnq = new HashMap<>();
+//            if(enq.getEnqLat() == nu enq.getEnqLng())
             distance = calculateDistance(lat, lng, enq.getEnqLat(), enq.getEnqLng());
             if (distance <= Double.parseDouble(String.valueOf(enq.getDistRange()))) {
                 Map<String, Long> reqMap = new HashMap<>();
@@ -450,8 +451,8 @@ public class EnqService {
                 .endDateTime(enq.getEndDateTime())
                 .ansedCnt(enq.getAnsedCnt())
                 .distLink(enq.getDistLink())
-                .enqLat(enq.getLat())
-                .enqLng(enq.getLng())
+                .enqLat(enq.getEnqLat())
+                .enqLng(enq.getEnqLng())
                 .distRange(enq.getDistRange())
                 .build();
         enqRepository.save(modifiedEnq);
@@ -543,6 +544,7 @@ public class EnqService {
                 .name(enq.getName())
                 .title(enq.getTitle())
                 .cont(enq.getCont())
+                .nodes(enq.getNodes())
                 .isShared(enq.getIsShared())
                 .enqStatus(enq.getEnqStatus())
                 .distType(enq.getDistType())
@@ -555,8 +557,8 @@ public class EnqService {
                 .endDateTime(enq.getEndDateTime())
                 .ansedCnt(enq.getAnsedCnt())
                 .distLink(enq.getDistLink())
-                .lat(enq.getEnqLat())
-                .lng(enq.getEnqLng())
+                .enqLat(enq.getEnqLat())
+                .enqLng(enq.getEnqLng())
                 .distRange(enq.getDistRange())
                 .build();
         return rspDTO;
