@@ -193,8 +193,9 @@ public class AnsService {
     /**
      * a9. 개별 응답지 조회 Service
      */
-    public Map<String, Object> getAns(Long enqId, Long ansId){
+    public Map<String, Object> getAns(Long ansId){
         Optional<Ans> ans = ansRepository.findById(ansId);
+        Long enqId = ans.get().getEnqId();;
         EnqDTO enq = enqServiceClient.getEnqByEnqId(enqId);
         Map<String, Object> rspMap = new HashMap<>();
         if(ans.isPresent()){

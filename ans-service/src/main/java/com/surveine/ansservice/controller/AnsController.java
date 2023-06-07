@@ -223,9 +223,9 @@ public class AnsController {
      * a9. 개별 응답지 조회
      */
     @GetMapping("/ans/{ansId}")
-    public ResponseEntity<Result> getAns(@PathVariable Long ansId, @RequestBody Long enqId, @RequestHeader Long memberId){
+    public ResponseEntity<Result> getAns(@PathVariable Long ansId, @RequestHeader Long memberId){
         try{
-            Map<String, Object> rspMap = ansService.getAns(enqId, ansId);
+            Map<String, Object> rspMap = ansService.getAns(ansId);
             Result result = Result.builder()
                     .isSuccess(true)
                     .message("응답지 조회 성공")
