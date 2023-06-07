@@ -631,4 +631,9 @@ public class AnsService {
             return "WAIT";
         }
     }
+
+    public Long getAnsCountByEnqId(Long enqId) {
+        Long rsp = ansRepository.countByEnqId(enqId);
+        return rsp;
+    }
 }

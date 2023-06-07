@@ -46,6 +46,7 @@ public class EnqService {
         if(enq.isPresent() && memberId == enqMemberId){
             return EnqRspDTO.builder()
                     .enq(enq.get())
+                    .answerCnt(ansServiceClient.getAnsCountByEnqId(enqId))
                     .nodes(mapper.readValue(enq.get().getNodes(), new TypeReference<>() {}))
                     .build();
         }else{
