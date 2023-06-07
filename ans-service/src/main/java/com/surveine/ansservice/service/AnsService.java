@@ -26,6 +26,7 @@ public class AnsService {
     private final AnsRepository ansRepository;
     private final EnqServiceClient enqServiceClient;
     private final MemberServiceClient memberServiceClient;
+    private final WspaceServiceClient wspaceServiceClient;
 
     public static List<AnsQstDTO> setAnsAnalysis(String saveFile) throws JsonProcessingException{
         if(saveFile == null){
@@ -77,7 +78,7 @@ public class AnsService {
                 .cont(objectMapper.writeValueAsString(reqDTO.getAnsCont()))
                 .enqId(reqDTO.getEnqId())
                 .memberId(memberId)
-                .aboxId(reqDTO.getAboxId())
+                .aboxId(wspaceServiceClient.getMemberDefaultAbox(memberId))
                 .status(AnsStatus.SAVE)
                 .isShow(true)
                 .updateDate(LocalDate.now())

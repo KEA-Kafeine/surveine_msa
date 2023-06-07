@@ -249,4 +249,9 @@ public class WspaceService {
         return rsp;
     }
 
+    public Long getMemberDeaultAbox(Long memberId) {
+        List<Abox> aboxList = aboxRepository.findByMemberId(memberId);
+        Long result = aboxList.get(0).getId();
+        return result;
+    }
 }

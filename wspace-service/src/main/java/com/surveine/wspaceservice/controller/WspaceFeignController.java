@@ -33,4 +33,10 @@ public class WspaceFeignController {
         SboxCboxDTO rsp = wspaceService.getSboxCboxDTOByMemberId(memberId);
         return rsp;
     }
+
+    @GetMapping("/wspace-service/defaultabox/{memberId}")
+    Long getMemberDefaultAbox(@PathVariable Long memberId) {
+        Long result = wspaceService.getMemberDeaultAbox(memberId);
+        return result;
+    }
 }
