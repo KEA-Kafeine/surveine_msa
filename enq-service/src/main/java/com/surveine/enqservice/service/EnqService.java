@@ -11,6 +11,7 @@ import com.surveine.enqservice.enums.DistType;
 import com.surveine.enqservice.enums.EnqStatus;
 import com.surveine.enqservice.repository.EnqRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.kafka.common.quota.ClientQuotaAlteration;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 @Service
 public class EnqService {
     private final EnqRepository enqRepository;
+    private final AnsServiceClient ansServiceClient;
 
     /**
      * e1. 설문지 조회 Service
@@ -379,19 +381,22 @@ public class EnqService {
         return enqWsDTOList;
     }
 
-    public List<Map<String, Object>> getGPSEnqWsDTOList(Double lat, Double lng){
+    public List<Map<String, Object>> getGPSEnqWsDTOList(Long memberId, Double lat, Double lng) {
         List<Enq> enqList = enqRepository.findEnqByDistTypeAndEnqStatus(DistType.GPS, EnqStatus.DIST_DONE);
         List<Map<String, Object>> availableEnqList = new ArrayList<>();
-//        Map<String, Object> availableEnq = new HashMap<>();
         double distance = 0;
-
         for (Enq enq : enqList) {
             Map<String, Object> availableEnq = new HashMap<>();
             distance = calculateDistance(lat, lng, enq.getEnqLat(), enq.getEnqLng());
             if (distance <= Double.parseDouble(String.valueOf(enq.getDistRange()))) {
+                Map<String, Long> reqMap = new HashMap<>();
+                reqMap.put("enqId", enq.getId());
+                String ansStatus = ansServiceClient.getAnsStatus(reqMap, memberId);
+
                 EnqWsDTO enqWsDTO = EnqWsDTO.builder()
                         .enq(enq)
                         .build();
+                availableEnq.put("ansStatus", ansStatus);
                 availableEnq.put("enq", enqWsDTO);
                 availableEnq.put("distance", String.format("%.1f", distance) + "m");
                 availableEnqList.add(availableEnq);
@@ -411,7 +416,6 @@ public class EnqService {
                 Math.cos(lat1) * Math.cos(lat2) *
                         Math.sin(dlon / 2) * Math.sin(dlon / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-//        long c2 = ((long) 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
 
         double distance = R * c * 10; // km 단위를 m 단위로 변환
 

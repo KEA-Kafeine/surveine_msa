@@ -17,7 +17,7 @@ public interface EnqServiceClient {
 
     @GetMapping("/enq-service/ws1/list/{cboxId}")
     List<EnqCBDTO> getEnqCBDTOList(@PathVariable Long cboxId);
-    @GetMapping("enq-service/ws3")
-    List<Map<String, Object>> getGPSEnqCBDTOList(@RequestParam("lat") Double lat, @RequestParam("lng") Double lng);
+    @GetMapping("enq-service/{memberId}}/ws3")
+    List<Map<String, Object>> getGPSEnqCBDTOList(@PathVariable Long memberId ,@RequestParam("lat") Double lat, @RequestParam("lng") Double lng);
 
 }

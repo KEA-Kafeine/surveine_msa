@@ -14,12 +14,13 @@ public class AnsCreateDTO {
     private Long enqId;
 
     private Long memberId;
+    private String name;
 
     // 질문 응답 내용 추가
     private List<AnsContDTO> ansCont;
 
     @Builder(toBuilder = true)
-    public AnsCreateDTO(Long id, Long enqId, Long memberId, List<AnsContDTO> ansCont) {
+    public AnsCreateDTO(Long id, Long enqId, String name, Long memberId, List<AnsContDTO> ansCont) {
         this.id = id;
         this.enqId = enqId;
         this.memberId = memberId;

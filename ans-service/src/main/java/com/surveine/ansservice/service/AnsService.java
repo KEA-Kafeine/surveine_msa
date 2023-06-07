@@ -193,17 +193,30 @@ public class AnsService {
     /**
      * a9. 개별 응답지 조회 Service
      */
-    public Map<String, Object> getAns(Long ansId){
-        Optional<Ans> ans = ansRepository.findById(ansId);
-        Long enqId = ans.get().getEnqId();;
+    public Map<String, Object> getAns(Long ansId) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Ans ans = ansRepository.findById(ansId).get();
+        Long enqId = ans.getEnqId();
         EnqDTO enq = enqServiceClient.getEnqByEnqId(enqId);
+
+        Map<String, Object> ansMap = new HashMap<>();
+        ansMap.put("aboxId", ans.getAboxId());
+        ansMap.put("cont", mapper.readValue(ans.getCont(), new TypeReference<>() {}));
+        ansMap.put("ansName", ans.getName());
+        ansMap.put("responseTime", String.valueOf(ans.getResponseTime()));
+        ansMap.put("status", String.valueOf(ans.getStatus()));
+
+        Map<String, Object> enqMap = new HashMap<>();
+        enqMap.put("cont", mapper.readValue(enq.getCont(), new TypeReference<>() {}));
+        enqMap.put("title", enq.getTitle());
+
         Map<String, Object> rspMap = new HashMap<>();
-        if(ans.isPresent()){
-            rspMap.put("ans", ans.get());
-            rspMap.put("enq", enq);
-        }
+        rspMap.put("ans", ansMap);
+        rspMap.put("enq", enqMap);
+
         return rspMap;
     }
+
 
     @Transactional
     public void submitAns(Long memberId, Long ansId) throws JsonProcessingException {
@@ -610,5 +623,14 @@ public class AnsService {
                 .updateDate(LocalDate.now())
                 .build();
         ansRepository.save(newAns);
+    }
+
+    public String getAnsStatus(Long enqId, Long memberId) {
+        if(ansRepository.existsByMemberIdAndEnqId(memberId, enqId)) { // 존재한다면, 상태 String return
+            Ans nowAns = ansRepository.findByMemberIdAndEnqId(memberId, enqId).get();
+            return String.valueOf(nowAns.getStatus());
+        } else { // 존재하지 않는다면, WAIT 리턴
+            return "WAIT";
+        }
     }
 }
