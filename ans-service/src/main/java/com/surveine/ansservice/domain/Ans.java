@@ -20,8 +20,8 @@ public class Ans {
     @Column(name = "ans_id")
     private Long id;
 
-    @Column(name = "ans_name")
-    private String name;
+    @Column(name = "enq_title")
+    private String enqTitle;
 
     @Column(name = "ans_cont", columnDefinition = "TEXT")
     private String cont;
@@ -49,9 +49,9 @@ public class Ans {
     private LocalDateTime responseTime;
 
     @Builder(toBuilder = true)
-    public Ans(Long id,String name, String cont, Long enqId, Long memberId, Long aboxId, AnsStatus status, Boolean isShow, LocalDate updateDate, LocalDateTime responseTime){
+    public Ans(Long id, String enqTitle, String cont, Long enqId, Long memberId, Long aboxId, AnsStatus status, Boolean isShow, LocalDate updateDate, LocalDateTime responseTime){
         this.id = id;
-        this.name = name;
+        this.enqTitle = enqTitle;
         this.cont = cont;
         this.enqId = enqId;
         this.memberId = memberId;

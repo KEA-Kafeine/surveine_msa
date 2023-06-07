@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class AnsCBDTO {
     private Long ansId;
 
-    private String enqName;
+    private String enqTitle;
 
     private AnsStatus ansStatus;
 
@@ -22,9 +22,9 @@ public class AnsCBDTO {
     private LocalDate updateDate;
 
     @Builder
-    public AnsCBDTO(Long ansId, String enqName, AnsStatus ansStatus, Boolean isShow, DistType distType, LocalDate updateDate) {
+    public AnsCBDTO(Long ansId, String enqTitle, AnsStatus ansStatus, Boolean isShow, DistType distType, LocalDate updateDate) {
         this.ansId = ansId;
-        this.enqName = enqName;
+        this.enqTitle = enqTitle;
         this.ansStatus = ansStatus;
         this.isShow = isShow;
         this.distType = distType;

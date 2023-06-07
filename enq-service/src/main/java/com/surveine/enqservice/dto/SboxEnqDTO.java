@@ -10,6 +10,6 @@ import lombok.Getter;
 public class SboxEnqDTO {
     private Long enqId;
     private Long favCount;
-    private String enqName;
+    private String enqTitle;
     private boolean isFav;
 }
