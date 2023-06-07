@@ -57,19 +57,11 @@ public class WspaceService {
 
         List<Cbox> cboxList = cboxRepository.findByMemberId(memberId);
         List<CboxSNDTO> cboxDTOList = cboxList.stream()
-                .map(cbox -> {
-                    final CboxSNDTO cboxDTO = CboxSNDTO.builder()
-                            .cboxId(cbox.getId())
-                            .cboxName(cbox.getName())
-                            .enqCnt(enqServiceClient.getEnqCountByCboxId(cbox.getId()))
-                            .build();
-                    return cboxDTO;
-                })
-//                .map(cbox -> CboxSNDTO.builder()
-//                        .cboxId(cbox.getId())
-//                        .cboxName(cbox.getName())
-//                        .enqCnt(enqServiceClient.getEnqCountByCboxId(cbox.getId()))
-//                        .build())
+                .map(cbox -> CboxSNDTO.builder()
+                        .cboxId(cbox.getId())
+                        .cboxName(cbox.getName())
+                        .enqCnt(enqServiceClient.getEnqCountByCboxId(cbox.getId()))
+                        .build())
                 .collect(Collectors.toList());
 
         rspMap.put("cboxList", cboxDTOList);
@@ -150,7 +142,10 @@ public class WspaceService {
         Map<String, Object> rspMap = new HashMap<>();
         List<Map<String, Object>> gpsEnqCBDTOList = new ArrayList<>();
         try{
-            gpsEnqCBDTOList = enqServiceClient.getGPSEnqCBDTOList(memberId, pointDTO.getLat(), pointDTO.getLng());
+            Map<String, Double> pointMap = new HashMap<>();
+            pointMap.put("lat", pointDTO.getLat());
+            pointMap.put("lng", pointDTO.getLng());
+            gpsEnqCBDTOList = enqServiceClient.getGPSEnqCBDTOList(memberId, pointMap);
         }catch (Exception e){
             e.printStackTrace();
         }
