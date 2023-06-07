@@ -12,7 +12,7 @@ import java.util.List;
 public class SboxFavDTO {
     private Long enqId;
     private Long favCount;
-    private String enqTitle;
+    private String enqName;
     private boolean isFav;
 
 }
