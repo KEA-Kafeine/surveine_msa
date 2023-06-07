@@ -3,11 +3,10 @@ package com.surveine.ansservice.controller;
 import com.surveine.ansservice.dto.AnsCBDTO;
 import com.surveine.ansservice.service.AnsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,5 +29,11 @@ public class AnsFeignController {
     List<AnsCBDTO> getAnsCBDTOList(@PathVariable Long aboxId) {
         List<AnsCBDTO> rspList = ansService.getAnsCBDTOList(aboxId);
         return rspList;
+    }
+
+    @PostMapping("/ans-service/ans/{memberId}")
+    String getAnsStatus(@RequestBody Map<String, Long> reqMap, @PathVariable Long memberId) {
+        String rsp = ansService.getAnsStatus(reqMap.get("enqId"), memberId);
+        return rsp;
     }
 }

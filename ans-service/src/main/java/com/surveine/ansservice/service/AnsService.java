@@ -624,4 +624,13 @@ public class AnsService {
                 .build();
         ansRepository.save(newAns);
     }
+
+    public String getAnsStatus(Long enqId, Long memberId) {
+        if(ansRepository.existsByMemberIdAndEnqId(memberId, enqId)) { // 존재한다면, 상태 String return
+            Ans nowAns = ansRepository.findByMemberIdAndEnqId(memberId, enqId).get();
+            return String.valueOf(nowAns.getStatus());
+        } else { // 존재하지 않는다면, WAIT 리턴
+            return "WAIT";
+        }
+    }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AnsRepository extends JpaRepository<Ans, Long> {
@@ -18,4 +19,6 @@ public interface AnsRepository extends JpaRepository<Ans, Long> {
     Boolean existsByMemberIdAndEnqId(Long memberId, Long enqId);
 
     List<Ans> findByEnqId(Long enqId);
+
+    Optional<Ans> findByMemberIdAndEnqId(Long memberId, Long enqId);
 }

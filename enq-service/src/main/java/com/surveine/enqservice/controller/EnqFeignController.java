@@ -41,9 +41,9 @@ public class EnqFeignController {
         return result;
     }
 
-    @GetMapping("enq-service/ws3")
-    List<Map<String, Object>> getGPSEnqCBDTOList(@RequestParam("lat") Double lat, @RequestParam("lng") Double lng) {
-        List<Map<String, Object>> result = enqService.getGPSEnqWsDTOList(lat, lng);
+    @GetMapping("enq-service/{memberId}/ws3")
+    List<Map<String, Object>> getGPSEnqCBDTOList(@PathVariable Long memberId, @RequestParam("lat") Double lat, @RequestParam("lng") Double lng) {
+        List<Map<String, Object>> result = enqService.getGPSEnqWsDTOList(memberId, lat, lng);
         return result;
     }
     @PostMapping("/enq-service/ans-result")
