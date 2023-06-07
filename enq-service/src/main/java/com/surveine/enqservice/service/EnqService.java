@@ -413,7 +413,7 @@ public class EnqService {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 //        long c2 = ((long) 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
 
-        double distance = R * c * 1000; // km 단위를 m 단위로 변환
+        double distance = R * c * 10; // km 단위를 m 단위로 변환
 
         return distance;
     }
