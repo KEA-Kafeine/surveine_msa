@@ -202,6 +202,7 @@ public class AnsService {
         Map<String, Object> ansMap = new HashMap<>();
         ansMap.put("aboxId", ans.getAboxId());
         ansMap.put("cont", mapper.readValue(ans.getCont(), new TypeReference<>() {}));
+        ansMap.put("ansName", ans.getName());
         ansMap.put("responseTime", String.valueOf(ans.getResponseTime()));
         ansMap.put("status", String.valueOf(ans.getStatus()));
 

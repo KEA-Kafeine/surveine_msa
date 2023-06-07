@@ -148,7 +148,6 @@ public class WspaceService {
     public Map<String, Object> getWspaceGboxPage(PointDTO pointDTO, Long memberId){
 
         Map<String, Object> rspMap = new HashMap<>();
-//        Point myLoc = new Point(lat.intValue(), lng.intValue());
         List<Map<String, Object>> gpsEnqCBDTOList = new ArrayList<>();
 //        List<EnqCBDTO> gpsEnqCBDTOList = new ArrayList<>();
         try{
