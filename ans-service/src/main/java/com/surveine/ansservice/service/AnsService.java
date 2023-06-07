@@ -229,6 +229,7 @@ public class AnsService {
         }
     }
 
+
     @Transactional
     public void addAnalysis(AnsDTO reqDto, Long memberId) throws JsonProcessingException{
         Optional<Ans> ans = ansRepository.findById(reqDto.getId());
@@ -266,8 +267,9 @@ public class AnsService {
                     if(matchAnalysis.getQstType().equals("서술형 질문")){ //이 Type은 뭐로 들어올까?
                         List<String> updateAns = matchAnalysis.getQstAns();
                         updateAns.add(userAnsCont.getAnswerText());
-                        matchAnalysis = matchAnalysis.toBuilder().qstAns(updateAns).build();
-
+                        matchAnalysis = matchAnalysis.toBuilder()
+                                .qstAns(updateAns)
+                                .build();
                     }
                     else if(matchAnalysis.getAnonymous()){ //익명성 질문인지 확인
                         AnsKindOfDTO currentKindOf = matchAnalysis.getQstAnsKind();
