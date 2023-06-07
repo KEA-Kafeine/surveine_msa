@@ -193,9 +193,10 @@ public class AnsService {
     /**
      * a9. 개별 응답지 조회 Service
      */
-    public Map<String, Object> getAns(Long enqId, Long ansId) throws JsonProcessingException {
+    public Map<String, Object> getAns(Long ansId) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Ans ans = ansRepository.findById(ansId).get();
+        Long enqId = ans.getEnqId();
         EnqDTO enq = enqServiceClient.getEnqByEnqId(enqId);
 
         Map<String, Object> ansMap = new HashMap<>();
