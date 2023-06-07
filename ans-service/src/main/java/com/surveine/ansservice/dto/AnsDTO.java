@@ -14,11 +14,9 @@ import java.util.List;
 public class AnsDTO {
     private Long id;
 
-    private String name;
+    private String enqTitle;
 
     private Long enqId;
-
-//    private Long memberId;
 
     private Long aboxId;
 
@@ -26,12 +24,11 @@ public class AnsDTO {
     private List<AnsContDTO> ansCont;
 
     @Builder(toBuilder = true)
-    public AnsDTO(Long id, Long enqId, Long aboxId, List<AnsContDTO> ansCont, String name) {
+    public AnsDTO(Long id, Long enqId, Long aboxId, String enqTitle, List<AnsContDTO> ansCont) {
         this.id = id;
         this.enqId = enqId;
         this.aboxId = aboxId;
-        this.name = name;
-//        this.memberId = memberId;
+        this.enqTitle = enqTitle;
         this.ansCont = ansCont;
     }
 }

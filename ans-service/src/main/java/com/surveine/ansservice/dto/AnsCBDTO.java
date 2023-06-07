@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class AnsCBDTO {
     private Long ansId;
 
-    private String enqName;
+    private String enqTitle;
 
     private AnsStatus ansStatus;
 
@@ -25,7 +25,7 @@ public class AnsCBDTO {
     @Builder
     public AnsCBDTO(Ans ans, DistType distType) {
         this.ansId = ans.getId();
-        this.enqName = ans.getName();
+        this.enqTitle = ans.getEnqTitle();
         this.ansStatus = ans.getStatus();
         this.isShow = ans.getIsShow();
         this.distType = distType;

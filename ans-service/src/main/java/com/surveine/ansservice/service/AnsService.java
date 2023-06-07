@@ -74,7 +74,7 @@ public class AnsService {
         ObjectMapper objectMapper = new ObjectMapper();
 
         Ans newAns = Ans.builder()
-                .name(enqServiceClient.getEnqByEnqId(reqDTO.getEnqId()).getName())
+                .enqTitle(enqServiceClient.getEnqByEnqId(reqDTO.getEnqId()).getTitle())
                 .cont(objectMapper.writeValueAsString(reqDTO.getAnsCont()))
                 .enqId(reqDTO.getEnqId())
                 .memberId(memberId)
@@ -102,7 +102,6 @@ public class AnsService {
         Ans ans = ansRepository.findById(ansId).get();
 
         Ans modifiedAns = ans.toBuilder()
-                .name(reqDTO.getName())
                 .cont(objectMapper.writeValueAsString(reqDTO.getAnsCont()))
                 .updateDate(LocalDate.now())
                 .build();
@@ -202,7 +201,6 @@ public class AnsService {
         Map<String, Object> ansMap = new HashMap<>();
         ansMap.put("aboxId", ans.getAboxId());
         ansMap.put("cont", mapper.readValue(ans.getCont(), new TypeReference<>() {}));
-        ansMap.put("ansName", ans.getName());
         ansMap.put("responseTime", String.valueOf(ans.getResponseTime()));
         ansMap.put("status", String.valueOf(ans.getStatus()));
 
@@ -235,7 +233,7 @@ public class AnsService {
                     .id(modifiedAns.getId())
                     .enqId(modifiedAns.getEnqId())
                     .aboxId(modifiedAns.getAboxId())
-                    .name(modifiedAns.getName())
+                    .enqTitle(modifiedAns.getEnqTitle())
                     .ansCont(ansCont)
                     .build();
             addAnalysis(ansDTO, memberId);
@@ -613,7 +611,7 @@ public class AnsService {
         Long enqId = reqMap.get("enqId");
         Long aboxId = reqMap.get("aboxId");
         Ans newAns = Ans.builder()
-                .name(enqServiceClient.getEnqByEnqId(enqId).getName())
+                .enqTitle(enqServiceClient.getEnqByEnqId(enqId).getName())
                 .cont("[]")
                 .enqId(enqId)
                 .memberId(memberId)

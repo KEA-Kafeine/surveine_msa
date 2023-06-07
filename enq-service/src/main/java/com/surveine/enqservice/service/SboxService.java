@@ -40,7 +40,7 @@ public class SboxService {
             boolean chkFav = isFav(i.getId(), memberId);
             SboxEnqDTO transform = SboxEnqDTO.builder()
                     .enqId(i.getId())
-                    .enqName(i.getTitle())
+                    .enqTitle(i.getTitle())
                     .favCount(i.getFavCount())
                     .isFav(chkFav)
                     .build();
@@ -60,7 +60,7 @@ public class SboxService {
             Optional<Enq> enq = enqRepository.findById(a.getEnqId());
             if(enq.isPresent()) {
                 SboxFavDTO favDTO = SboxFavDTO.builder()
-                        .enqName(enq.get().getName())
+                        .enqTitle(enq.get().getName())
                         .enqId(enq.get().getId())
                         .favCount(enq.get().getFavCount())
                         .isFav(true)
