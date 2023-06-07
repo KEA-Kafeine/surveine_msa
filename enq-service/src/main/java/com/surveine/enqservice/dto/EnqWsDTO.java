@@ -13,6 +13,7 @@ public class EnqWsDTO {
     private Long enqId;
 
     private String enqName;
+    private String enqTitle;
 
     private EnqStatus enqStatus;
 
@@ -27,6 +28,7 @@ public class EnqWsDTO {
     public EnqWsDTO(Enq enq) {
         this.enqId = enq.getId();
         this.enqName = enq.getName();
+        this.enqTitle = enq.getTitle();
         this.enqStatus = enq.getEnqStatus();
         this.distType = enq.getDistType();
         this.isShared = enq.getIsShared();
