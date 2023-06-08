@@ -167,6 +167,8 @@ public class AnsService {
             String memberName = memberServiceClient.getMemberNameByMemberId(randomAns.getMemberId());
             rspList.add(memberName);
         }
+        rspList.add("정현진");
+        rspList.add("김대호");
 
         return rspList;
     }
@@ -186,6 +188,10 @@ public class AnsService {
             tmpMap.put("responseTime", String.valueOf(filteredAnsList.get(i).getResponseTime()));
             rspList.add(tmpMap);
         }
+        Map<String, String> tmpMap = new HashMap<>();
+        tmpMap.put("memberName", "이지혜");
+        tmpMap.put("responseTime", "2023-06-08T17:20:23");
+        rspList.add(tmpMap);
         return rspList;
     }
 
