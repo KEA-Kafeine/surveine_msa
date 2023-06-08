@@ -162,8 +162,7 @@ public class EnqService {
     public void moveEnq(Long enqId, Map<String, Long> reqMap, Long memberId){
         Optional<Enq> enq = enqRepository.findById(enqId);
         Long enqMemberId = enq.get().getMemberId();
-        Long currentMemberId = 1L; //TODO: 토큰 요구. 하드코딩 바꾸기
-        if(enq.isPresent() && enqMemberId == currentMemberId){
+        if(enq.isPresent() && enqMemberId == memberId){
             Enq rspEnq = enq.get().toBuilder()
                     .cboxId(reqMap.get("cboxId"))
                     .build();
